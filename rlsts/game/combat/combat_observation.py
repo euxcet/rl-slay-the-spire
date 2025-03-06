@@ -1,0 +1,3 @@
+class CombatObservation():
+    def __init__(self):
+        ...
