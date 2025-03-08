@@ -12,7 +12,7 @@ class Pile():
     def __init__(
         self,
         deck: Deck = None,
-        combat: Combat = None,
+        combat: 'Combat' = None,
     ) -> None:
         self.cards: list[Card] = []
         if deck is not None:

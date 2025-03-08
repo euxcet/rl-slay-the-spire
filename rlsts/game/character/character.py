@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 from ..card.deck import Deck
 from ..card.pile import Pile
+from ..effect import Effect
 if TYPE_CHECKING:
     from ..combat.combat import Combat
 
@@ -25,24 +26,32 @@ class Character(ABC):
         self.discard_pile: Pile = None
         self.energy: int = 0
         self.played_card = None
+        self.block: int = 0
+        self.effects: list[Effect] = []
 
     def is_in_combat(self) -> bool:
         return self.combat is not None
 
-    def start_combat(self, combat: Combat) -> None:
+    def start_combat(self, combat: 'Combat') -> None:
         self.combat = combat
         self.orientation = 0
-        self.draw_pile = Pile(deck=self.deck)
+        self.draw_pile = Pile(deck=self.deck, combat=combat)
         self.draw_pile.shuffle()
         self.exhaust_pile = Pile()
         self.discard_pile = Pile()
+        self.block = 0
+        self.effects.clear()
 
     def start_turn(self) -> None:
         assert self.is_in_combat()
         self.draw(self.num_turn_draw())
         self.energy += self.num_turn_energy()
+        self.block = 0
 
     def end_turn(self) -> None:
+        for effect in self.effects:
+            effect.stack -= effect.decrease_per_turn
+        self.effects = [effect for effect in self.effects if effect.stack > 0]
         for i in range(len(self.hand_pile)):
             card = self.hand_pile.draw()
             card.on_turn_discard()
@@ -80,9 +89,29 @@ class Character(ABC):
             # TODO: punish
             ...
         else:
-            self.played_card.play()
+            if self.played_card.play():
+                self.played_card = None
 
     def choose_in_card(self, card_id: int) -> None:
         assert self.played_card is not None
-        self.played_card.choose(card_id)
+        if self.played_card.choose(card_id):
+            self.played_card = None
 
+
+    def prepare_attack(self, damage: int) -> int:
+        for effect in self.effects:
+            attack = effect.modify_damage(damage)
+        return attack
+
+    def add_block(self, block: int) -> int:
+        for effect in self.effects:
+            block = effect.modify_block(block)
+        self.block += block
+
+    def receive_effect(self, new_effect: Effect) -> None:
+        for effect in self.effects:
+            if type(effect) == type(new_effect):
+                effect.stack += new_effect.stack
+                return
+        self.effects.append(new_effect)
+        

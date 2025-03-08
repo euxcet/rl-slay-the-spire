@@ -7,4 +7,4 @@ class SlayTheSpire():
         self.character = Ironclad()
 
     def get_combat(self) -> Combat:
-        return Combat(self.character, [Cultist])
+        return Combat(self.character, [Cultist()])
