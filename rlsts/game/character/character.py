@@ -12,7 +12,7 @@ class Character(ABC):
         self,
         hp: int,
         gold: int,
-        deck: Deck = Deck(),
+        deck: Deck,
         orientation: bool = False, # 0: right  1: left
     ) -> None:
         self.hp = hp
@@ -57,6 +57,10 @@ class Character(ABC):
             card.on_turn_discard()
             self.discard_pile.insert(card)
 
+    def die(self) -> None:
+        self.combat.combat_over = True
+        self.combat.game_over = True
+
     def draw(self, num: int) -> None:
         for i in range(num):
             if len(self.draw_pile) == 0:
@@ -97,7 +101,6 @@ class Character(ABC):
         if self.played_card.choose(card_id):
             self.played_card = None
 
-
     def prepare_attack(self, damage: int) -> int:
         for effect in self.effects:
             attack = effect.modify_damage(damage)
@@ -109,9 +112,29 @@ class Character(ABC):
         self.block += block
 
     def receive_effect(self, new_effect: Effect) -> None:
+        new_effect.target_enemy = None
         for effect in self.effects:
             if type(effect) == type(new_effect):
                 effect.stack += new_effect.stack
                 return
         self.effects.append(new_effect)
-        
+
+    def estimate_damage(self, damage: int) -> int:
+        for effect in self.effects:
+            damage = effect.modify_received_damage(damage)
+        # TODO: relics ...
+        return damage
+    
+    def receive_damage(self, damage: int) -> int:
+        damage = self.estimate_damage(damage)
+        if damage <= self.block:
+            self.block -= damage
+            return 0
+        damage -= self.block
+        self.block = 0
+        if damage >= self.hp:
+            hp = self.hp
+            self.die()
+            return hp
+        self.hp -= damage
+        return damage

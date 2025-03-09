@@ -33,7 +33,7 @@ class Card(ABC):
         type: CardType,
         energy: int,
         playable: bool,
-        target_types: list[CardTargetType] = [],
+        target_types: list[CardTargetType],
     ) -> None:
         self.rarity = rarity
         self.type = type

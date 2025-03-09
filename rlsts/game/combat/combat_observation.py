@@ -1,4 +1,5 @@
 from ..effect.effect import Effect
+from ..enemy.intent import Intent
 
 class CombatObservation():
     def __init__(
@@ -9,7 +10,7 @@ class CombatObservation():
         enemies_hp: list[int],
         enemies_block: list[int],
         enemies_effect: list[list[Effect]],
-        # enemies_intent: list[list[Intent]],
+        enemies_intent: list[list[Intent]],
         sum_enemies_attack: int,
     ) -> None:
         self.character_hp = character_hp
@@ -18,4 +19,5 @@ class CombatObservation():
         self.enemies_hp = enemies_hp
         self.enemies_block = enemies_block
         self.enemies_effect = enemies_effect
+        self.enemies_intent = enemies_intent
         self.sum_enemies_attack = sum_enemies_attack

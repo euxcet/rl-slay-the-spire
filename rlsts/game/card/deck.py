@@ -5,7 +5,7 @@ from .starter import Strike, Defend
 from .ironclad import Bash
 
 class Deck():
-    def __init__(self, cards: list[Card] = []) -> None:
+    def __init__(self, cards: list[Card]) -> None:
         self.cards = cards
 
     @staticmethod

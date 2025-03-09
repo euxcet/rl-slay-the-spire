@@ -12,6 +12,8 @@ class Combat():
         self.enemies = enemies
         self.turn = 0
         self.action_shape = 10
+        self.game_over = False
+        self.combat_over = False
 
     def enemy_die(self) -> None:
         self.enemies = [enemy for enemy in self.enemies if not enemy.died]
@@ -23,11 +25,9 @@ class Combat():
         )
 
     def reset(self) -> CombatObservation:
-        print(type(self.character), 'run')
+        self.combat_over = False
         self.character.start_combat(self)
-        print('done')
         for enemy in self.enemies:
-            print(type(enemy))
             enemy.start_combat(self)
         return self.observe()
 
@@ -42,7 +42,11 @@ class Combat():
         ...
 
     def end_turn(self) -> CombatObservation:
-        ...
+        for enemy in self.enemies:
+            enemy.perform()
+        # TODO: check dead
+        self.turn += 1
+        return self.observe()
 
     def step(self, action: int) -> CombatObservation:
         if action == self.action_shape - 1: # end_turn
@@ -62,3 +66,4 @@ class Combat():
             self.character.play_card(action)
         else:
             self.character.choose_in_card(action)
+        return self.observe()

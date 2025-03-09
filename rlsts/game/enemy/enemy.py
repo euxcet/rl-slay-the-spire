@@ -22,6 +22,7 @@ class Enemy(ABC):
     def start_turn(self) -> None:
         self.block = 0
 
+    @abstractmethod
     def perform(self) -> None:
         ...
 
@@ -47,9 +48,17 @@ class Enemy(ABC):
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
+        new_effect.target_enemy = self
         for effect in self.effects:
             if type(effect) == type(new_effect):
                 effect.stack += new_effect.stack
                 return
         self.effects.append(new_effect)
         
+    def prepare_attack(self, damage: int) -> int:
+        for effect in self.effects:
+            attack = effect.modify_damage(damage)
+        return attack
+
+    def attack(self, damage: int) -> int:
+        return self.combat.character.receive_damage(self.prepare_attack(damage))
