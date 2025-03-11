@@ -27,6 +27,9 @@ class Effect():
     def modify_block(self, block: int) -> int:
         return block
 
+    def on_turn_end(self) -> None:
+        ...
+
     @property
     def target(self) -> 'Enemy | Character':
         return self.combat.character if self.target_enemy is None else self.target_enemy

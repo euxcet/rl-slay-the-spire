@@ -12,57 +12,67 @@ class Combat():
         self.enemies = enemies
         self.turn = 0
         self.action_shape = 10
-        self.game_over = False
-        self.combat_over = False
+        self.is_over = False
+        self.is_game_over = False
 
     def enemy_die(self) -> None:
         self.enemies = [enemy for enemy in self.enemies if not enemy.died]
-
-    def observe(self) -> CombatObservation:
-        return CombatObservation(
-            character_hp=self.character.hp,
-            character_block=self.character.block,
-        )
+        if len(self.enemies) == 0:
+            self.is_over = True
 
     def reset(self) -> CombatObservation:
         self.combat_over = False
+        self.turn = 0
         self.character.start_combat(self)
         for enemy in self.enemies:
             enemy.start_combat(self)
+        self.character.start_turn()
         return self.observe()
 
     def observe(self) -> CombatObservation:
         # use potion
         # play card
         # end turn
-
-        # self.character.play()
-        # for enemy in self.enemies:
-        #     enemy.move()
-        ...
+        return CombatObservation(
+            is_over=self.is_over,
+            is_game_over=self.is_game_over,
+            character_type=type(self.character),
+            character_hp=self.character.hp,
+            character_block=self.character.block,
+            character_effects=self.character.effects,
+            character_energy=self.character.energy,
+            hand_cards=self.character.hand_pile.cards,
+            playing_card=self.character.playing_card,
+            playing_step=0 if self.character.playing_card is None else self.character.playing_card.current_target_id,
+            enemies_type=[type(enemy) for enemy in self.enemies],
+            enemies_hp=[enemy.hp for enemy in self.enemies],
+            enemies_block=[enemy.block for enemy in self.enemies],
+            enemies_effects=[enemy.effects for enemy in self.enemies],
+            enemies_intent=[enemy.get_intent() for enemy in self.enemies],
+            sum_enemies_attack=sum([enemy.get_intent().get_damage() for enemy in self.enemies]),
+        )
 
     def end_turn(self) -> CombatObservation:
+        self.character.end_turn()
         for enemy in self.enemies:
             enemy.perform()
+        for enemy in self.enemies:
+            enemy.end_turn()
         # TODO: check dead
         self.turn += 1
+        self.character.start_turn()
         return self.observe()
 
     def step(self, action: int) -> CombatObservation:
         if action == self.action_shape - 1: # end_turn
+            if self.character.is_card_playing():
+                print("Error action.")
+                return self.observe()
             return self.end_turn()
-            # for enemy in self.enemies:
-            #     enemy.perform()
-            # # TODO: check dead
-            # self.turn += 1
-
-        # if not self.character.has_playable_card():
-        #     for enemy in self.enemies:
-        #         enemy.perform()
-        #     # TODO: check dead
-        #     self.turn += 1
-
-        if not self.character.is_card_played():
+        if not self.character.is_card_playing():
+            if not self.character.can_play_card(action):
+                print('Error action.')
+                return self.observe()
             self.character.play_card(action)
         else:
             self.character.choose_in_card(action)

@@ -7,11 +7,11 @@ class Cultist(Enemy):
     def __init__(self) -> None:
         super().__init__(hp=random.randint(48, 54))
 
-    def get_intent(self) -> None:
+    def get_intent(self) -> Intent:
         if self.combat.turn == 0:
             return Intent(IntentType.CULTIST_INCANTATION, [])
         else:
-            return Intent(IntentType.ATTACK, [6])
+            return Intent(IntentType.ATTACK, [self.estimate_attack(6), 1])
 
     def perform(self) -> None:
         if self.combat.turn == 0:

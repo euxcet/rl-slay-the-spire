@@ -27,11 +27,8 @@ class Pile():
     def draw(self) -> Card:
         return self.cards.pop()
     
-    def draw_by_id(self, card_id: int) -> Card:
-        for i, card in enumerate(self.cards):
-            if card.id == card_id:
-                return self.cards.pop(i)
-        return None
+    def draw_index(self, index: int) -> Card:
+        return self.cards.pop(index)
     
     # TODO: insert at the beginning?
     def insert(self, card: Card) -> None:

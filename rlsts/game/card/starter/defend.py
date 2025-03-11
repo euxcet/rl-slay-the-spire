@@ -9,7 +9,7 @@ class Defend(Card):
             playable=True,
             target_types=[],
         )
-        self.block = 6
+        self.block = 5
 
     def finish(self) -> None:
         self.add_block(self.block)
