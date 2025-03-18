@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..combat import Combat
-    from ..enemy import Enemy
-    from ..character import Character
+    from ..target import Target
 
 class Effect():
     # TODO: ID
@@ -16,7 +15,7 @@ class Effect():
         self.stack = stack
         self.combat = combat
         self.decrease_per_turn = decrease_per_turn
-        self.target_enemy: 'Enemy' = None
+        self.target: Target = None
 
     def modify_damage(self, damage: int) -> int:
         return damage
@@ -30,6 +29,5 @@ class Effect():
     def on_turn_end(self) -> None:
         ...
 
-    @property
-    def target(self) -> 'Enemy | Character':
-        return self.combat.character if self.target_enemy is None else self.target_enemy
+    def on_receive_damage(self, damage: int) -> None:
+        ...

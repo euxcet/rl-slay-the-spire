@@ -4,6 +4,8 @@ from enum import Enum, unique, auto
 class IntentType(Enum):
     ATTACK = auto()
     CULTIST_INCANTATION = auto()
+    LOUSE_GROW = auto()
+    LOUSE_SPIT_WEB = auto()
 
 class Intent():
     def __init__(self, type: IntentType, values: list[int]) -> None:
@@ -30,4 +32,6 @@ class Intent():
     def rich(self) -> str:
         if self.type is IntentType.ATTACK:
             return f'{self.type.name} {self.values[0]} * {self.values[1]} = [bold red]{self.values[0] * self.values[1]}[/bold red]'
-        return self.type.name
+        if self.values is None or len(self.values) == 0:
+            return self.type.name
+        return f"{self.type.name}[{' '.join(map(str, self.values))}]"
