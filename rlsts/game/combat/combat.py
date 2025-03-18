@@ -14,9 +14,19 @@ class Combat():
         self.action_shape = 10
         self.is_over = False
         self.is_game_over = False
+        self.update_enemy()
 
-    def enemy_die(self) -> None:
-        self.enemies = [enemy for enemy in self.enemies if not enemy.died]
+    def update_enemy(self) -> None:
+        for position, enemy in enumerate(self.enemies):
+            enemy.position = position
+
+    def add_enemy(self, position: int, enemy: Enemy) -> None:
+        self.enemies.insert(position, enemy)
+        self.update_enemy()
+
+    def remove_enemy(self, enemy: Enemy) -> None:
+        self.enemies.remove(enemy)
+        self.update_enemy()
         if len(self.enemies) == 0:
             self.is_over = True
 
@@ -55,6 +65,8 @@ class Combat():
     def end_turn(self) -> CombatObservation:
         self.character.end_turn()
         for enemy in self.enemies:
+            enemy.start_turn()
+        for enemy in self.enemies.copy():
             enemy.perform()
         for enemy in self.enemies:
             enemy.end_turn()

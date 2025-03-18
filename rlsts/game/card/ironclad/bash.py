@@ -6,8 +6,7 @@ class Bash(Card):
         super().__init__(
             rarity=CardRarity.Starter,
             type=CardType.Attack,
-            energy=2,
-            playable=True,
+            cost=2,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = 8

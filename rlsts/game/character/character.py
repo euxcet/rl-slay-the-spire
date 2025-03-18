@@ -16,19 +16,16 @@ class Character(Target):
         deck: Deck,
         orientation: bool = False, # 0: right  1: left
     ) -> None:
-        self.hp = hp
+        super().__init__(hp)
         self.gold = gold
         self.deck = deck
         self.orientation = orientation
-        self.combat = None
         self.draw_pile: Pile = None
         self.hand_pile: Pile = None
         self.exhaust_pile: Pile = None
         self.discard_pile: Pile = None
         self.energy: int = 0
         self.playing_card = None
-        self.block: int = 0
-        self.effects: list[Effect] = []
 
     def is_in_combat(self) -> bool:
         return self.combat is not None
@@ -62,14 +59,16 @@ class Character(Target):
 
     def draw(self, num: int) -> None:
         for _ in range(num):
+            # print(f'Draw draw_pile {len(self.draw_pile)}  discard_pile {len(self.discard_pile)}  exhaust_pile {len(self.exhaust_pile)}')
             if len(self.draw_pile) == 0:
                 for __ in range(len(self.discard_pile)):
                     card = self.discard_pile.draw()
                     self.draw_pile.insert(card)
                 self.draw_pile.shuffle()
-            card = self.draw_pile.draw()
-            card.on_draw()
-            self.hand_pile.insert(card)
+            if len(self.draw_pile) > 0:
+                card = self.draw_pile.draw()
+                card.on_draw()
+                self.hand_pile.insert(card)
 
     def num_turn_draw(self) -> int:
         return 5
@@ -87,14 +86,14 @@ class Character(Target):
         return False
 
     def can_play_card(self, card_id: int) -> bool:
-        return card_id >= 0 and card_id < len(self.hand_pile) and self.energy >= self.hand_pile.cards[card_id].energy
+        return card_id >= 0 and card_id < len(self.hand_pile) and self.energy >= self.hand_pile.cards[card_id].cost
 
     def play_card(self, card_index: int) -> None:
         if not self.can_play_card(card_index):
             print("punish")
             return
         self.playing_card = self.hand_pile.draw_index(card_index)
-        self.energy -= self.playing_card.energy
+        self.energy -= self.playing_card.cost
         if self.playing_card.play():
             self.playing_card = None
 

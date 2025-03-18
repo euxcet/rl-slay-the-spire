@@ -5,8 +5,7 @@ class Strike(Card):
         super().__init__(
             rarity=CardRarity.Starter,
             type=CardType.Attack,
-            energy=1,
-            playable=True,
+            cost=1,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = 6

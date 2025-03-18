@@ -1,1 +1,25 @@
-from .intent import Intent, IntentType
+from .intent import Intent
+from .attack_intent import AttackIntent
+from .cultist_incantation_intent import CultistIncantationIntent
+from .louse_grow_intent import LouseGrowIntent
+from .louse_spit_web_intent import LouseSpitWebIntent
+from .acid_slime_corrosive_spit_intent import AcidSlimeCorrosiveSpitIntent
+from .acid_slime_lick_intent import AcidSlimeLickIntent
+from .acid_slime_split_intent import AcidSlimeSplitIntent
+from .spike_slime_flame_tackle_intent import SpikeSlimeFlameTackleIntent
+from .spike_slime_lick_intent import SpikeSlimeLickIntent
+from .spike_slime_split_intent import SpikeSlimeSplitIntent
+
+from ....utils.collection import Collection
+
+intent_collection = Collection()
+intent_collection.add(AttackIntent)
+intent_collection.add(CultistIncantationIntent)
+intent_collection.add(LouseGrowIntent)
+intent_collection.add(LouseSpitWebIntent)
+intent_collection.add(AcidSlimeCorrosiveSpitIntent)
+intent_collection.add(AcidSlimeLickIntent)
+intent_collection.add(AcidSlimeSplitIntent)
+intent_collection.add(SpikeSlimeFlameTackleIntent)
+intent_collection.add(SpikeSlimeLickIntent)
+intent_collection.add(SpikeSlimeSplitIntent)

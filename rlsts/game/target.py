@@ -10,10 +10,11 @@ class Target(ABC):
         hp: int,
     ) -> None:
         self.hp = hp
-        self.block = 0
+        self.max_hp = hp
+        self.block: int = 0
         self.effects: list[Effect] = []
         self.combat: Combat = None
-        self.died = False
+        self.died: bool = False
 
     def start_combat(self, combat: 'Combat') -> None:
         self.combat = combat

@@ -1,14 +1,14 @@
 from ..card import Card, CardRarity, CardType, CardTargetType
 
-class Defend(Card):
+class Slimed(Card):
     def __init__(self):
         super().__init__(
-            rarity=CardRarity.Starter,
-            type=CardType.Skill,
+            rarity=CardRarity.Common,
+            type=CardType.Status,
             cost=1,
             target_types=[],
+            is_ethereal=True,
         )
-        self.block = 5
 
     def finish(self) -> None:
-        self.add_block(self.block)
+        ...

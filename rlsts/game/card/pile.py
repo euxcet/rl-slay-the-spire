@@ -34,5 +34,8 @@ class Pile():
     def insert(self, card: Card) -> None:
         self.cards.append(card)
 
+    def shuffle_into(self, card: Card) -> None:
+        self.cards.insert(random.randint(0, len(self.cards)), card)
+
     def __len__(self) -> int:
         return len(self.cards)

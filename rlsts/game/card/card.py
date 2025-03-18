@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import TYPE_CHECKING
@@ -16,6 +18,8 @@ class CardType(Enum):
     Attack = 0
     Skill = 1
     Power = 2
+    Status = 3
+    Curse = 4
 
 class CardTargetType(Enum):
     Enemy = 0
@@ -31,14 +35,17 @@ class Card(ABC):
         self,
         rarity: CardRarity,
         type: CardType,
-        energy: int,
-        playable: bool,
+        cost: int,
         target_types: list[CardTargetType],
+        is_unplayable: bool = False,
+        is_ethereal: bool = False,
     ) -> None:
         self.rarity = rarity
         self.type = type
-        self.energy = energy
-        self.playable = playable
+        self.cost = cost
+        self.origin_cost = cost
+        self.is_unplayable = is_unplayable
+        self.is_ethereal = is_ethereal
         self.combat: 'Combat' = None
         self.target_types = target_types
 
@@ -47,7 +54,7 @@ class Card(ABC):
         self.current_target_id = 0
         self.targets = []
         if len(self.target_types) == 0:
-            self.finish()
+            self._finish()
             return True
         return False
 
@@ -56,9 +63,20 @@ class Card(ABC):
         self.targets.append(id)
         self.current_target_id += 1
         if self.current_target_id == len(self.target_types):
-            self.finish()
+            self._finish()
             return True
         return False
+
+    def to(self, combat: Combat) -> Card:
+        self.combat = combat
+        return self
+
+    def _finish(self) -> None:
+        self.finish()
+        if self.is_ethereal:
+            self.combat.character.exhaust_pile.insert(self)
+        else:
+            self.combat.character.discard_pile.insert(self)
 
     @abstractmethod
     def finish(self) -> None:
