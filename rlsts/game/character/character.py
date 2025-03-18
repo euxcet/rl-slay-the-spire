@@ -30,6 +30,11 @@ class Character(Target):
     def is_in_combat(self) -> bool:
         return self.combat is not None
 
+    def attack(self, target: int, damage: int) -> int:
+        for effect in self.effects:
+            effect.on_attack()
+        return self.combat.enemies[target].receive_damage(self.prepare_attack(damage))
+
     def start_combat(self, combat: 'Combat') -> None:
         super().start_combat(combat)
         self.orientation = 0
@@ -101,3 +106,8 @@ class Character(Target):
         assert self.playing_card is not None
         if self.playing_card.choose(card_id):
             self.playing_card = None
+
+    def remove_gold(self, g: int) -> int:
+        g = min(g, self.gold)
+        self.gold -= g
+        return g

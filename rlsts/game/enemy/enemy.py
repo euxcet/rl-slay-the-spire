@@ -6,7 +6,6 @@ from typing import TYPE_CHECKING
 from ..target import Target
 if TYPE_CHECKING:
     from ..combat import Combat
-from ..effect import Effect
 from .intent import Intent
 from ...utils.random_pool import RandomPool
 
@@ -42,6 +41,8 @@ class Enemy(Target):
         return self.combat.character.estimate_received_damage(self.prepare_attack(damage))
 
     def attack(self, damage: int) -> int:
+        for effect in self.effects:
+            effect.on_attack()
         return self.combat.character.receive_damage(self.prepare_attack(damage))
 
     # intent, chance, continuous_limit
@@ -59,6 +60,3 @@ class Enemy(Target):
                 return option[0]
             r -= option[1] / s
         assert False
-
-
-            

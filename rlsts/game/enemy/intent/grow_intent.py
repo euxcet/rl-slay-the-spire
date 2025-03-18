@@ -4,7 +4,7 @@ from ...effect import Strength
 if TYPE_CHECKING:
     from .. import Enemy
 
-class LouseGrowIntent(Intent):
+class GrowIntent(Intent):
     def __init__(self, enemy: 'Enemy', values: list[int]) -> None:
         super().__init__(enemy=enemy, values=values)
         

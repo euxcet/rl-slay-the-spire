@@ -1,18 +1,18 @@
 from .intent import Intent
 from typing import TYPE_CHECKING
+from ...effect import Vulnerable
 if TYPE_CHECKING:
-    from ...enemy import Enemy
+    from .. import Enemy
 
-class AttackIntent(Intent):
+class ScrapeIntent(Intent):
+    # attack vulnerable
     def __init__(self, enemy: 'Enemy', values: list[int]) -> None:
         super().__init__(enemy=enemy, values=values)
         self.values[0] = enemy.estimate_attack(self.values[0])
-        if len(self.values) == 1:
-            self.values.append(1)
-        
+
     def get_damage(self) -> int:
-        return self.values[0] * self.values[1]
+        return self.values[0]
 
     def perform(self) -> None:
-        for _ in range(self.values[1]):
-            self.enemy.attack(self.values[0])
+        self.enemy.attack(self.values[0])
+        self.enemy.combat.character.receive_effect(Vulnerable(self.enemy.combat, self.values[1]))

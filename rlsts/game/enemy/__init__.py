@@ -1,10 +1,9 @@
-import numpy as np
 from .enemy import Enemy
 from .monster.cultist import Cultist
-from .monster.red_louse import RedLouse
-from .monster.green_louse import GreenLouse
-from .monster.acid_slime import AcidSlimeL, AcidSlimeM, AcidSlimeS
-from .monster.spike_slime import SpikeSlimeL, SpikeSlimeM, SpikeSlimeS
+from .monster.louses import RedLouse
+from .monster.louses import GreenLouse
+from .monster.slimes import AcidSlimeL, AcidSlimeM, AcidSlimeS
+from .monster.slimes import SpikeSlimeL, SpikeSlimeM, SpikeSlimeS
 from ...utils.collection import Collection
 
 enemy_collection = Collection()

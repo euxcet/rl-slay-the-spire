@@ -59,6 +59,8 @@ class Target(ABC):
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
+        if new_effect.stack == 0:
+            return
         new_effect.target = self
         for effect in self.effects:
             if type(effect) == type(new_effect):

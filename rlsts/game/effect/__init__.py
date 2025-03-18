@@ -4,6 +4,8 @@ from .buff.buff import Buff
 from .buff.ritual import Ritual
 from .buff.strength import Strength
 from .buff.curl_up import CurlUp
+from .buff.angry import Angry
+from .buff.thievery import Thievery
 
 from .debuff.debuff import Debuff
 from .debuff.vulnerable import Vulnerable
@@ -17,6 +19,8 @@ effect_collection = Collection()
 effect_collection.add(Ritual)
 effect_collection.add(Strength)
 effect_collection.add(CurlUp)
+effect_collection.add(Angry)
+effect_collection.add(Thievery)
 
 effect_collection.add(Vulnerable)
 effect_collection.add(Weak)

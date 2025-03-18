@@ -31,3 +31,6 @@ class Effect():
 
     def on_receive_damage(self, damage: int) -> None:
         ...
+
+    def on_attack(self) -> None:
+        ...

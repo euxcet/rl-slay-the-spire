@@ -98,7 +98,7 @@ class Card(ABC):
         self.combat.character.add_block(block)
 
     def attack(self, target: int, damage: int) -> int:
-        return self.combat.enemies[target].receive_damage(self.combat.character.prepare_attack(damage))
+        self.combat.character.attack(target, damage)
 
     def effect_character(self, effect: 'Effect') -> None:
         self.combat.character.receive_effect(effect)

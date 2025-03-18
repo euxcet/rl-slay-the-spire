@@ -1,7 +1,7 @@
 from .intent import Intent
 from .attack_intent import AttackIntent
 from .cultist_incantation_intent import CultistIncantationIntent
-from .louse_grow_intent import LouseGrowIntent
+from .grow_intent import GrowIntent
 from .louse_spit_web_intent import LouseSpitWebIntent
 from .acid_slime_corrosive_spit_intent import AcidSlimeCorrosiveSpitIntent
 from .acid_slime_lick_intent import AcidSlimeLickIntent
@@ -9,17 +9,42 @@ from .acid_slime_split_intent import AcidSlimeSplitIntent
 from .spike_slime_flame_tackle_intent import SpikeSlimeFlameTackleIntent
 from .spike_slime_lick_intent import SpikeSlimeLickIntent
 from .spike_slime_split_intent import SpikeSlimeSplitIntent
+from .jaw_worm_bellow_intent import JawWormBellowIntent
+from .thrash_intent import ThrashIntent
+from .smash_intent import SmashIntent
+from .gremlin_wizard_charging_intent import GremlinWizardChargingIntent
+from .shield_gremlin_protect_intent import ShieldGremlinProtectIntent
+from .looter_smoke_bomb_intent import LooterSmokeBombIntent
+from .looter_escape_intent import LooterEscapeIntent
+from .scrape_intent import ScrapeIntent
+from .red_slaver_entangle_intent import RedSlaverEntangleIntent
 
 from ....utils.collection import Collection
 
 intent_collection = Collection()
 intent_collection.add(AttackIntent)
+intent_collection.add(SmashIntent)
+intent_collection.add(ScrapeIntent)
+intent_collection.add(ThrashIntent)
+
 intent_collection.add(CultistIncantationIntent)
-intent_collection.add(LouseGrowIntent)
+
+intent_collection.add(GrowIntent)
 intent_collection.add(LouseSpitWebIntent)
+
 intent_collection.add(AcidSlimeCorrosiveSpitIntent)
 intent_collection.add(AcidSlimeLickIntent)
 intent_collection.add(AcidSlimeSplitIntent)
 intent_collection.add(SpikeSlimeFlameTackleIntent)
 intent_collection.add(SpikeSlimeLickIntent)
 intent_collection.add(SpikeSlimeSplitIntent)
+
+intent_collection.add(JawWormBellowIntent)
+
+intent_collection.add(GremlinWizardChargingIntent)
+intent_collection.add(ShieldGremlinProtectIntent)
+
+intent_collection.add(LooterSmokeBombIntent)
+intent_collection.add(LooterEscapeIntent)
+
+intent_collection.add(RedSlaverEntangleIntent)

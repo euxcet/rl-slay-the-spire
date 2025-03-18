@@ -66,10 +66,14 @@ class Combat():
         self.character.end_turn()
         for enemy in self.enemies:
             enemy.start_turn()
+        # The actions of enemies may cause changes to the list.
         for enemy in self.enemies.copy():
             enemy.perform()
         for enemy in self.enemies:
             enemy.end_turn()
+        # Some intents need to be determined at the start of the turn.
+        for enemy in self.enemies:
+            enemy.get_intent()
         # TODO: check dead
         self.turn += 1
         self.character.start_turn()
