@@ -2,22 +2,24 @@ import numpy as np
 
 class Collection():
     def __init__(self) -> None:
-        self.num: int = 0
-        self.types: list[type] = []
+        self.num: int = 1 # 0 for Placeholder(None)
+        self.types: dict[type, int] = {}
 
     def add(self, t: type) -> None:
         t.ID = self.num
-        self.types.append(t)
+        self.types[t] = self.num
         self.num += 1
 
-    def tensor(self, ts: list[type]) -> np.ndarray:
-        r = np.zeros(self.num, np.int8)
-        for t in ts:
-            if t is not type:
-                t = type(t)
-            for i in range(len(self.types)):
-                if self.types[i] == t:
-                    r[i] += 1
+    def tensor(self, ts: list[type], dtype: type = np.int32, values: list[int] = None) -> np.ndarray:
+        r = np.zeros(self.num, dtype=dtype)
+        values = values or [1 for _ in range(len(ts))]
+        for t, v in zip(ts, values):
+            if t is None:
+                r[0] += v
+            elif t is not type:
+                r[self.types[type(t)]] += v
+            else:
+                r[self.types[t]] += v
         return r
     
     def __len__(self) -> int:

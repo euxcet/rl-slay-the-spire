@@ -48,10 +48,16 @@ class Card(ABC):
         self.is_ethereal = is_ethereal
         self.combat: 'Combat' = None
         self.target_types = target_types
+        self.step = 0
+
+    def target_type(self) -> CardTargetType:
+        if len(self.target_types) == 0:
+            return None
+        return self.target_types[self.step]
 
     # return: has the card completed its function
     def play(self) -> bool:
-        self.current_target_id = 0
+        self.step = 0
         self.targets = []
         if len(self.target_types) == 0:
             self._finish()
@@ -61,8 +67,8 @@ class Card(ABC):
     # return: has the card completed its function
     def choose(self, id: int) -> bool:
         self.targets.append(id)
-        self.current_target_id += 1
-        if self.current_target_id == len(self.target_types):
+        self.step += 1
+        if self.step == len(self.target_types):
             self._finish()
             return True
         return False

@@ -8,7 +8,7 @@ class AcidSlimeSplitIntent(Intent):
         super().__init__(enemy=enemy, values=values)
 
     def perform(self) -> None:
-        from ..monster.acid_slime import AcidSlimeM
+        from ..monster.slimes import AcidSlimeM
         self.enemy.combat.add_enemy(self.enemy.position, AcidSlimeM(self.enemy.hp).to(self.enemy.combat))
         self.enemy.combat.add_enemy(self.enemy.position, AcidSlimeM(self.enemy.hp).to(self.enemy.combat))
         # TODO: garbage collection

@@ -6,11 +6,12 @@ authors = ["euxcet <zcc.qwer@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.9"
 torch = "^2.6.0"
 ray = {extras = ["rllib"], version = "^2.43.0"}
 pytest = "^8.3.5"
 rich = "^13.9.4"
+pillow = "^11.1.0"
 
 
 [build-system]

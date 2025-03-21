@@ -9,6 +9,7 @@ class CombatObservation():
         is_game_over: bool,
         character_type: type,
         character_hp: int,
+        character_max_hp: int,
         character_block: int,
         character_energy: int,
         character_effects: list[Effect],
@@ -17,6 +18,7 @@ class CombatObservation():
         playing_step: int,
         enemies_type: list[type],
         enemies_hp: list[int],
+        enemies_max_hp: list[int],
         enemies_block: list[int],
         enemies_effects: list[list[Effect]],
         enemies_intent: list[Intent],
@@ -26,6 +28,7 @@ class CombatObservation():
         self.is_game_over = is_game_over
         self.character_type = character_type
         self.character_hp = character_hp
+        self.character_max_hp = character_max_hp
         self.character_block = character_block
         self.character_effects = character_effects
         self.character_energy = character_energy
@@ -34,6 +37,7 @@ class CombatObservation():
         self.playing_step = playing_step
         self.enemies_type = enemies_type
         self.enemies_hp = enemies_hp
+        self.enemies_max_hp = enemies_max_hp
         self.enemies_block = enemies_block
         self.enemies_effects = enemies_effects
         self.enemies_intent = enemies_intent

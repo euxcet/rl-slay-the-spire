@@ -1,5 +1,5 @@
 import numpy as np
-from .card import Card
+from .card import Card, CardTargetType
 from .starter import Strike, Defend
 from .ironclad import Bash
 from .status import Slimed
