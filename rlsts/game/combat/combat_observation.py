@@ -1,6 +1,6 @@
 from ..effect.effect import Effect
 from ..enemy.intent import Intent
-from ..card import Card
+from ..card import Card, Pile
 
 class CombatObservation():
     def __init__(
@@ -13,7 +13,11 @@ class CombatObservation():
         character_block: int,
         character_energy: int,
         character_effects: list[Effect],
-        hand_cards: list[Card],
+        character_hp_lost: int,
+        hand_pile: Pile,
+        draw_pile: Pile,
+        discard_pile: Pile,
+        exhaust_pile: Pile,
         playing_card: Card | None,
         playing_step: int,
         enemies_type: list[type],
@@ -23,6 +27,7 @@ class CombatObservation():
         enemies_effects: list[list[Effect]],
         enemies_intent: list[Intent],
         sum_enemies_attack: int,
+        error: str,
     ) -> None:
         self.is_over = is_over
         self.is_game_over = is_game_over
@@ -32,7 +37,11 @@ class CombatObservation():
         self.character_block = character_block
         self.character_effects = character_effects
         self.character_energy = character_energy
-        self.hand_cards = hand_cards
+        self.character_hp_lost = character_hp_lost
+        self.hand_pile = hand_pile
+        self.draw_pile  = draw_pile
+        self.discard_pile = discard_pile
+        self.exhaust_pile = exhaust_pile
         self.playing_card = playing_card
         self.playing_step = playing_step
         self.enemies_type = enemies_type
@@ -42,6 +51,7 @@ class CombatObservation():
         self.enemies_effects = enemies_effects
         self.enemies_intent = enemies_intent
         self.sum_enemies_attack = sum_enemies_attack
+        self.error = error
 
     def __str__(self) -> str:
         # TODO
@@ -80,7 +90,7 @@ class CombatObservation():
                     enumerate(zip(self.enemies_type, self.enemies_hp, self.enemies_block, self.enemies_effects, self.enemies_intent))
             ]
         )
-        cards_str = ' '.join([f'[bold green]{type(card).__name__}[{id}][/bold green]' for id, card in enumerate(self.hand_cards)]) + '\n'
+        cards_str = ' '.join([f'[bold green]{type(card).__name__}[{id + 1}][/bold green]' for id, card in enumerate(self.hand_pile.cards)]) + '\n'
         playing_card = 'None' if self.playing_card is None else f'[bold yellow]{type(self.playing_card).__name__}[/bold yellow] {self.playing_step}'
         return f'\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n' + \
                f'[bold blue]{self.character_type.__name__}[/bold blue]\n' + \

@@ -22,3 +22,6 @@ build-backend = "poetry.core.masonry.api"
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"
 priority = "primary"
+
+[tool.poetry.scripts]
+train = "rlsts.train:train"

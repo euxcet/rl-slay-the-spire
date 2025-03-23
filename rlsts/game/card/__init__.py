@@ -1,5 +1,6 @@
 import numpy as np
 from .card import Card, CardTargetType
+from .pile import Pile
 from .starter import Strike, Defend
 from .ironclad import Bash
 from .status import Slimed

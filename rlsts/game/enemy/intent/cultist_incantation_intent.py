@@ -10,4 +10,3 @@ class CultistIncantationIntent(Intent):
         
     def perform(self) -> None:
         self.enemy.receive_effect(Ritual(self.enemy.combat, self.values[0]))
-

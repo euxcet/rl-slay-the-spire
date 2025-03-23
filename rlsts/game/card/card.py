@@ -64,9 +64,21 @@ class Card(ABC):
             return True
         return False
 
+    def can_choose(self, target: int) -> bool:
+        if self.target_types[self.step] == CardTargetType.Enemy:
+            return target < len(self.combat.enemies)
+        elif self.target_types[self.step] == CardTargetType.Hand:
+            return target < len(self.combat.character.hand_pile)
+        elif self.target_types[self.step] == CardTargetType.Draw:
+            return target < len(self.combat.character.draw_pile)
+        elif self.target_types[self.step] == CardTargetType.Discard:
+            return target < len(self.combat.character.discard_pile)
+        elif self.target_types[self.step] == CardTargetType.Exhaust:
+            return target < len(self.combat.character.exhaust_pile)
+
     # return: has the card completed its function
-    def choose(self, id: int) -> bool:
-        self.targets.append(id)
+    def choose(self, target: int) -> bool:
+        self.targets.append(target)
         self.step += 1
         if self.step == len(self.target_types):
             self._finish()

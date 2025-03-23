@@ -16,10 +16,10 @@ class Collection():
         for t, v in zip(ts, values):
             if t is None:
                 r[0] += v
-            elif t is not type:
-                r[self.types[type(t)]] += v
-            else:
+            elif isinstance(t, type):
                 r[self.types[t]] += v
+            else:
+                r[self.types[type(t)]] += v
         return r
     
     def __len__(self) -> int:

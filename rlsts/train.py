@@ -1,45 +1,101 @@
+import os
+import ray
 from ray import tune
+from ray.rllib.core.rl_module.rl_module import RLModuleSpec
 from ray.rllib.utils.test_utils import (
     add_rllib_example_script_args,
     run_rllib_example_script_experiment,
 )
 from ray.tune.registry import get_trainable_cls
-
-parser = add_rllib_example_script_args(
-    default_iters=50, default_reward=180, default_timesteps=100000
+from ray.tune import CLIReporter
+from ray.rllib.algorithms.ppo import PPOConfig
+from ray.rllib.utils.metrics import (
+    DIFF_NUM_GRAD_UPDATES_VS_SAMPLER_POLICY,
+    ENV_RUNNER_RESULTS,
+    ENV_RUNNER_RESULTS,
+    EPISODE_RETURN_MEAN,
+    FAULT_TOLERANCE_STATS,
+    EVALUATION_RESULTS,
+    LEARNER_RESULTS,
+    NUM_ENV_STEPS_TRAINED,
+    NUM_ENV_STEPS_SAMPLED_LIFETIME,
+    TIMERS,
 )
-parser.set_defaults(
-    enable_new_api_stack=True,
-    num_env_runners=2,
-)
+from ray.tune.result import TRAINING_ITERATION
 
+from .env.combat_env import CombatEnv
+from .module.combat_module import CombatModule
 
-if __name__ == "__main__":
-    args = parser.parse_args()
-
-    base_config = (
-        get_trainable_cls(args.algo)
-        .get_default_config()
-        # This script only works on the new API stack.
+def train():
+    ray.init(num_cpus=4, ignore_reinit_error=True)
+    config = (
+        PPOConfig()
+        .framework("torch")
+        .environment(CombatEnv)
         .api_stack(
             enable_rl_module_and_learner=True,
             enable_env_runner_and_connector_v2=True,
         )
-        .environment("CartPole-v1")
-        # Define EnvRunner scaling.
-        .env_runners(num_env_runners=args.num_env_runners)
-        # Define Learner scaling.
-        .learners(
-            # How many Learner workers do we need? If you have more than 1 GPU,
-            # set this parameter to the number of GPUs available.
-            num_learners=args.num_learners,
-            # How many GPUs does each Learner need? If you have more than 1 GPU or only
-            # one Learner, you should set this to 1, otherwise, set this to some
-            # fraction.
-            num_gpus_per_learner=args.num_gpus_per_learner,
+        .env_runners(
+            num_env_runners=1,
+            num_envs_per_env_runner=1,
         )
-        # 4 tune trials altogether.
-        .training(lr=tune.grid_search([0.005, 0.003, 0.001, 0.0001]))
+        .learners(
+            num_learners=1,
+            num_gpus_per_learner=0,
+        )
+        .rl_module(
+            rl_module_spec=RLModuleSpec(
+                module_class=CombatModule,
+                model_config={},
+            ),
+        )
+        .training(
+            train_batch_size=8192,
+            minibatch_size=128,
+        )
+    )
+    os.environ["RAY_AIR_NEW_OUTPUT"] = "0"
+
+    progress_reporter = CLIReporter(
+        metric_columns={
+            **{
+                TRAINING_ITERATION: "iter",
+                "time_total_s": "total time (s)",
+                NUM_ENV_STEPS_SAMPLED_LIFETIME: "ts",
+                f"{ENV_RUNNER_RESULTS}/{EPISODE_RETURN_MEAN}": "combined return",
+            },
+            **{
+                (
+                    f"{ENV_RUNNER_RESULTS}/module_episode_returns_mean/" f"{pid}"
+                ): f"return {pid}"
+                for pid in config.policies
+            },
+        },
     )
 
-    run_rllib_example_script_experiment(base_config, args, keep_config=True)
+    results = tune.Tuner(
+        "PPO",
+        param_space=config,
+        run_config=tune.RunConfig(
+            stop= {
+                "training_iteration": 1000,
+            },
+            verbose=True,
+            callbacks=[],
+            checkpoint_config=tune.CheckpointConfig(
+                checkpoint_frequency=0,
+                checkpoint_at_end=True,
+            ),
+            progress_reporter=progress_reporter,
+        ),
+        tune_config=tune.TuneConfig(
+            num_samples=1,
+            max_concurrent_trials=None,
+            scheduler=None,
+        ),
+    ).fit()
+    ray.shutdown()
+
+if __name__ == "__main__":
+    train()
