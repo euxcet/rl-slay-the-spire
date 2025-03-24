@@ -1,3 +1,4 @@
+import numpy as np
 from ..effect.effect import Effect
 from ..enemy.intent import Intent
 from ..card import Card, Pile
@@ -27,6 +28,7 @@ class CombatObservation():
         enemies_effects: list[list[Effect]],
         enemies_intent: list[Intent],
         sum_enemies_attack: int,
+        action_mask: np.ndarray,
         error: str,
     ) -> None:
         self.is_over = is_over
@@ -51,6 +53,7 @@ class CombatObservation():
         self.enemies_effects = enemies_effects
         self.enemies_intent = enemies_intent
         self.sum_enemies_attack = sum_enemies_attack
+        self.action_mask = action_mask
         self.error = error
 
     def __str__(self) -> str:

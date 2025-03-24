@@ -11,11 +11,13 @@ class Effect():
         combat: 'Combat',
         stack: int,
         decrease_per_turn: int,
+        skip: int = 0,
     ) -> None:
         self.stack = stack
         self.combat = combat
         self.decrease_per_turn = decrease_per_turn
         self.target: Target = None
+        self.skip = skip
 
     def modify_damage(self, damage: int) -> int:
         return damage

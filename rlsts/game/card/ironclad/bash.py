@@ -13,5 +13,6 @@ class Bash(Card):
         self.debuff = 2
 
     def finish(self) -> None:
-        self.attack(self.targets[0], self.damage)
-        self.effect_enemy(self.targets[0], Vulnerable(self.combat, 2))
+        enemy = self.get_enemy(self.targets[0])
+        self.attack(enemy, self.damage)
+        self.effect_enemy(enemy, Vulnerable(self.combat, 2))

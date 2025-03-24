@@ -10,9 +10,11 @@ class Buff(Effect):
         combat: 'Combat',
         stack: int,
         decrease_per_turn: int,
+        skip: int = 0,
     ) -> None:
         super().__init__(
             combat=combat,
             stack=stack,
-            decrease_per_turn=decrease_per_turn
+            decrease_per_turn=decrease_per_turn,
+            skip=skip,
         )

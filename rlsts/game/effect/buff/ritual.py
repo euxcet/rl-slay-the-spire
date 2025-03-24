@@ -10,8 +10,12 @@ class Ritual(Buff):
         self,
         combat: 'Combat',
         stack: int,
+        skip: int,
     ) -> None:
-        super().__init__(combat=combat, stack=stack, decrease_per_turn=0)
+        super().__init__(combat=combat, stack=stack, decrease_per_turn=0, skip=skip)
 
     def on_turn_end(self):
-        self.target.receive_effect(Strength(self.combat, self.stack))
+        if self.skip > 0:
+            self.skip -= 1
+        else:
+            self.target.receive_effect(Strength(self.combat, self.stack))

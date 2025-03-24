@@ -6,6 +6,7 @@ from ..card.deck import Deck
 from ..card.pile import Pile
 from ..effect import Effect
 if TYPE_CHECKING:
+    from ..enemy import Enemy
     from ..combat.combat import Combat
 
 class Character(Target):
@@ -30,10 +31,10 @@ class Character(Target):
     def is_in_combat(self) -> bool:
         return self.combat is not None
 
-    def attack(self, target: int, damage: int) -> int:
+    def attack(self, enemy: 'Enemy', damage: int) -> int:
         for effect in self.effects:
             effect.on_attack()
-        return self.combat.enemies[target].receive_damage(self.prepare_attack(damage))
+        return enemy.receive_damage(self.prepare_attack(damage))
 
     def start_combat(self, combat: 'Combat') -> None:
         super().start_combat(combat)

@@ -33,8 +33,7 @@ class Enemy(Target):
         intent.perform()
 
     def die(self) -> None:
-        self.hp = 0
-        self.died = True
+        super().die()
         self.combat.remove_enemy(self)
 
     def estimate_attack(self, damage: int) -> int:

@@ -1,3 +1,4 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from .effect import Effect
 from typing import TYPE_CHECKING
@@ -16,9 +17,10 @@ class Target(ABC):
         self.combat: Combat = None
         self.died: bool = False
 
-    def start_combat(self, combat: 'Combat') -> None:
+    def start_combat(self, combat: 'Combat') -> Target:
         self.combat = combat
         self.effects.clear()
+        return self
 
     def die(self) -> None:
         self.hp = 0

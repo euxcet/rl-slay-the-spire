@@ -39,3 +39,18 @@ class Pile():
 
     def __len__(self) -> int:
         return len(self.cards)
+
+    def __iter__(self):
+        self.index = 0
+        return self
+
+    def __next__(self) -> Card:
+        if self.index < len(self.cards):
+            v = self.cards[self.index]
+            self.index += 1
+            return v
+        else:
+            raise StopIteration
+
+    def __getitem__(self, index: int) -> Card:
+        return self.cards[index]

@@ -53,6 +53,9 @@ def train():
         .training(
             train_batch_size=8192,
             minibatch_size=128,
+            entropy_coeff=0.01,
+            kl_coeff=0.2,
+            kl_target=0.004,
         )
     )
     os.environ["RAY_AIR_NEW_OUTPUT"] = "0"
@@ -84,7 +87,7 @@ def train():
             verbose=True,
             callbacks=[],
             checkpoint_config=tune.CheckpointConfig(
-                checkpoint_frequency=0,
+                checkpoint_frequency=1,
                 checkpoint_at_end=True,
             ),
             progress_reporter=progress_reporter,

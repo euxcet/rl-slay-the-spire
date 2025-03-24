@@ -1,6 +1,8 @@
+import numpy as np
 from .combat_observation import CombatObservation
 from ..character import Character
 from ..enemy import Enemy
+from copy import deepcopy
 
 class Combat():
     MAX_ACTION = 10
@@ -8,37 +10,52 @@ class Combat():
     def __init__(
         self,
         character: Character,
-        enemies: list[Enemy],
+        enemies_type: list[type],
     ) -> None:
-        self.character = character
-        self.enemies = enemies
-        self.turn = 0
-        self.is_over = False
-        self.is_game_over = False
-        self.update_enemy()
+        self.origin_character = character
+        self.enemies_type = enemies_type
 
-    def update_enemy(self) -> None:
+    def update_enemies(self) -> None:
         for position, enemy in enumerate(self.enemies):
             enemy.position = position
-
-    def add_enemy(self, position: int, enemy: Enemy) -> None:
-        self.enemies.insert(position, enemy)
-        self.update_enemy()
-
-    def remove_enemy(self, enemy: Enemy) -> None:
-        self.enemies.remove(enemy)
-        self.update_enemy()
         if len(self.enemies) == 0:
             self.is_over = True
 
+    def add_enemy(self, position: int, enemy: Enemy) -> None:
+        self.enemies.insert(position, enemy)
+        self.update_enemies()
+
+    def remove_enemy(self, enemy: Enemy) -> None:
+        self.enemies.remove(enemy)
+        self.update_enemies()
+
+    def check_enemies(self) -> None:
+        self.enemies = [enemy for enemy in self.enemies if enemy.hp > 0]
+        self.update_enemies()
+
     def reset(self) -> CombatObservation:
-        self.combat_over = False
         self.turn = 0
-        self.character.start_combat(self)
+        self.is_over = False
+        self.is_game_over = False
+        self.character = deepcopy(self.origin_character)
+        self.enemies: list[Enemy] = [enemy() for enemy in self.enemies_type]
         for enemy in self.enemies:
             enemy.start_combat(self)
+        self.character.start_combat(self)
         self.character.start_turn()
+        self.update_enemies()
         return self.observe()
+
+    def get_action_mask(self) -> np.ndarray:
+        if self.character.is_card_playing():
+            return self.character.playing_card.get_action_mask(self.MAX_ACTION)
+        else:
+            mask = np.zeros((self.MAX_ACTION,), dtype=np.float32)
+            mask[0] = 1
+            for i, card in enumerate(self.character.hand_pile):
+                if not card.is_unplayable and card.cost <= self.character.energy:
+                    mask[i + 1] = 1
+            return mask
 
     def observe(self, initial_hp: int = None, error: str = None) -> CombatObservation:
         # use potion
@@ -67,10 +84,11 @@ class Combat():
             enemies_effects=[enemy.effects for enemy in self.enemies],
             enemies_intent=[enemy.get_intent() for enemy in self.enemies],
             sum_enemies_attack=sum([enemy.get_intent().get_damage() for enemy in self.enemies]),
+            action_mask=self.get_action_mask(),
             error=error,
         )
 
-    def end_turn(self, initial_hp: int = None) -> CombatObservation:
+    def end_turn(self) -> None:
         self.character.end_turn()
         for enemy in self.enemies:
             enemy.start_turn()
@@ -82,23 +100,24 @@ class Combat():
         # Some intents need to be determined at the start of the turn.
         for enemy in self.enemies:
             enemy.get_intent()
-        # TODO: check dead
         self.turn += 1
         self.character.start_turn()
-        return self.observe(initial_hp=initial_hp)
 
     def step(self, action: int) -> CombatObservation:
+        # print(self.turn, self.observe(), action)
         initial_hp = self.character.hp
-
         if self.character.is_card_playing():
             if not self.character.playing_card.can_choose(action):
+                print("Invalid target", action, len(self.enemies), self.is_over, self.get_action_mask())
                 return self.observe(error="Invalid target.")
             self.character.choose_in_card(action)
         else:
             if action == 0: # end_turn
-                return self.end_turn(initial_hp=initial_hp)
+                self.end_turn()
             else:
-                if not self.character.can_play_card(action):
+                if not self.character.can_play_card(action - 1):
+                    print("Invalid action", action)
                     return self.observe(error="Invalid action.")
                 self.character.play_card(action - 1)
+        self.check_enemies()
         return self.observe(initial_hp=initial_hp)
