@@ -8,16 +8,18 @@ from ..effect import Effect
 if TYPE_CHECKING:
     from ..enemy import Enemy
     from ..combat.combat import Combat
+    from ..card import Card
 
 class Character(Target):
     def __init__(
         self,
         hp: int,
+        max_hp: int,
         gold: int,
         deck: Deck,
         orientation: bool = False, # 0: right  1: left
     ) -> None:
-        super().__init__(hp)
+        super().__init__(hp=hp, max_hp=max_hp)
         self.gold = gold
         self.deck = deck
         self.orientation = orientation
@@ -112,3 +114,9 @@ class Character(Target):
         g = min(g, self.gold)
         self.gold -= g
         return g
+
+    def add_cards(self, cards: list['Card']) -> None:
+        self.deck.add_cards(cards)
+
+    # def remove_card(self, card):
+    #     ...

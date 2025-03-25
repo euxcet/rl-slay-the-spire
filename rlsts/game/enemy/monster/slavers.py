@@ -10,7 +10,7 @@ class BlueSlaver(Enemy):
         self.smash_weak = 1
 
     def get_intent(self) -> Intent:
-        self.choose_intent([
+        return self.choose_intent([
             (AttackIntent(self, [self.damage, 1]), 0.6, 3),
             (SmashIntent(self, [self.smash_damage, self.smash_weak]), 0.4, 3),
         ])

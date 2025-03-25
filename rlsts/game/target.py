@@ -9,9 +9,10 @@ class Target(ABC):
     def __init__(
         self,
         hp: int,
+        max_hp: int,
     ) -> None:
         self.hp = hp
-        self.max_hp = hp
+        self.max_hp = max_hp
         self.block: int = 0
         self.effects: list[Effect] = []
         self.combat: Combat = None

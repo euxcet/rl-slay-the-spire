@@ -10,8 +10,7 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
 
     @override(TorchRLModule)
     def setup(self) -> None:
-        # input_dim = 506
-        input_dim = 495
+        input_dim = 2266
         output_dim = self.action_space.n
         self._policy_net = torch.nn.Sequential(
             Linear(input_dim, 128),
@@ -30,6 +29,7 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
 
     def _get_input_tensor(self, batch):
         obs = batch[Columns.OBS]
+
         character_hp: torch.Tensor = obs['character_hp']
         # character_max_hp: torch.Tensor = obs['character_max_hp']
         character_block: torch.Tensor = obs['character_block']

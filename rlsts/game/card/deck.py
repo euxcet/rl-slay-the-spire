@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from .card import Card
-from .starter import Strike, Defend
-from .ironclad import Bash
+from .starter.strike import Strike
+from .starter.defend import Defend
+from .ironclad.attack.bash import Bash
 
 class Deck():
     def __init__(self, cards: list[Card]) -> None:
@@ -15,3 +16,9 @@ class Deck():
             Defend(), Defend(), Defend(), Defend(),
             Bash(),
         ])
+
+    def add_cards(self, cards: list[Card]) -> None:
+        if isinstance(cards, list):
+            self.cards.extend(cards)
+        else:
+            self.cards.append(cards)

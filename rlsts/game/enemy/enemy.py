@@ -14,7 +14,7 @@ class Enemy(Target):
         self,
         hp: int,
     ) -> None:
-        super().__init__(hp)
+        super().__init__(hp=hp, max_hp=hp)
         self.position = 0
         self.intent_history: list[Intent] = []
         self.intent_pool = RandomPool()
@@ -59,3 +59,6 @@ class Enemy(Target):
                 return option[0]
             r -= option[1] / s
         assert False
+
+    def __lt__(self, other: Enemy) -> bool:
+        return self.ID < other.ID

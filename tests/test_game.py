@@ -5,11 +5,11 @@ class TestGame():
     def test_game(self):
         console = Console()
         game = SlayTheSpire()
-        combat = game.get_combat()
+        combat = game.get_act1_easy_combat()
         obs = combat.reset()
         console.log(obs.rich())
         while True:
-            action = int(input())
+            action = int(console.input('Input action: '))
             obs = combat.step(action)
             if obs.is_over:
                 break

@@ -5,7 +5,11 @@ class Collection():
         self.num: int = 1 # 0 for Placeholder(None)
         self.types: dict[type, int] = {}
 
-    def add(self, t: type) -> None:
+    def add(self, t: type | list) -> None:
+        if isinstance(t, list):
+            for x in t:
+                self.add(x)
+            return
         t.ID = self.num
         self.types[t] = self.num
         self.num += 1

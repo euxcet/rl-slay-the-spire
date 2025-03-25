@@ -39,6 +39,7 @@ class Combat():
         self.is_game_over = False
         self.character = deepcopy(self.origin_character)
         self.enemies: list[Enemy] = [enemy() for enemy in self.enemies_type]
+        self.enemies.sort()
         for enemy in self.enemies:
             enemy.start_combat(self)
         self.character.start_combat(self)

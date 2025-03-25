@@ -3,7 +3,8 @@ from gymnasium.spaces import Discrete, Box, Dict
 import numpy as np
 import random
 from typing import Optional
-from ..game.combat import Combat, CombatObservation
+from ..game.slay_the_spire import SlayTheSpire
+from ..game.combat import Combat, CombatObservation, random_combat
 from ..game.character import Ironclad
 from ..game.enemy import Cultist
 from ..game.enemy.intent import intent_collection
@@ -25,7 +26,7 @@ class CombatEnv(gym.Env):
 
     def __init__(self, config: Optional[dict] = None) -> None:
         config = config or {}
-        self.game = Combat(Ironclad(), [Cultist])
+        self.game = random_combat(Ironclad())
         self.observation_space = Dict({
             "character_hp": Box(low=0, high=1, shape=(1,), dtype=np.float32),
             # "character_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),
