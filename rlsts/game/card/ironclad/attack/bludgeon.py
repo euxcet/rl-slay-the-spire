@@ -4,14 +4,14 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 class Bludgeon(Card):
     def __init__(self, damage: int = 32) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Attack,
             cost=3,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
 

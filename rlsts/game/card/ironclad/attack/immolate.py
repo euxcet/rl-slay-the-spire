@@ -1,22 +1,21 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
+from ...status.burn import Burn
 
 class Immolate(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage: int = 21) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Attack,
-            cost=0,
+            cost=2,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage
 
-    def finish(self) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+    def finish(self, energy: int) -> None:
+        for enemy in self.combat.enemies:
+            self.attack(enemy, self.damage)
+        Burn().to(self.combat).move_to(self.discard_pile)
 
 class ImmolatePlus(Immolate):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(damage=28)

@@ -1,22 +1,21 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Rampage(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage_inc: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Attack,
-            cost=0,
+            cost=1,
             target_types=[CardTargetType.Enemy],
         )
-        self.damage = damage
+        self.damage_inc = damage_inc
+        self.damage = 8
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.damage += self.damage_inc
 
 class RampagePlus(Rampage):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(damage_inc=8)

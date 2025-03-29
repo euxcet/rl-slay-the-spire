@@ -1,22 +1,20 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
+from ....effect import Strength, FlexStrength
 
 class Flex(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, strength: int = 2) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Skill,
             cost=0,
-            target_types=[CardTargetType.Enemy],
+            target_types=[],
         )
-        self.damage = damage
+        self.strength = strength
 
-    def finish(self) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+    def finish(self, energy: int) -> None:
+        self.effect_character(Strength(self.strength))
+        self.effect_character(FlexStrength(self.strength))
 
 class FlexPlus(Flex):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(strength=4)

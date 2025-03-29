@@ -1,22 +1,22 @@
-# TODO
-from copy import deepcopy
-from ...card import Card, CardRarity, CardType, CardTargetType
+import random
+from ...card import Card, CardRarity, CardType
 
 class SwordBoomerang(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, times: int = 3) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Attack,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.damage = 3
+        self.times = times
 
-    def finish(self) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+    def finish(self, energy: int) -> None:
+        for _ in range(self.times):
+            if len(self.combat.enemies) > 0:
+                self.attack(random.choice(self.combat.enemies), self.damage)
 
 class SwordBoomerangPlus(SwordBoomerang):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(times=4)

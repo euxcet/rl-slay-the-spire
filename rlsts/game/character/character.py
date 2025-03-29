@@ -33,6 +33,7 @@ class Character(Target):
     def is_in_combat(self) -> bool:
         return self.combat is not None
 
+    # TODO: move to Card
     def attack(self, enemy: 'Enemy', damage: int) -> int:
         for effect in self.effects:
             effect.on_attack()
@@ -55,10 +56,12 @@ class Character(Target):
     def end_turn(self) -> None:
         super().end_turn()
         self.energy = 0
-        for _ in range(len(self.hand_pile)):
-            card = self.hand_pile.draw()
-            card.on_turn_discard()
-            self.discard_pile.insert(card)
+        for card in self.hand_pile.cards.copy():
+            card.discard(is_turn_end=True)
+        # for _ in range(len(self.hand_pile)):
+        #     card = self.hand_pile.draw()
+        #     card.on_turn_discard()
+        #     self.discard_pile.insert(card)
 
     def die(self) -> None:
         super().die()
@@ -69,14 +72,18 @@ class Character(Target):
         for _ in range(num):
             # print(f'Draw draw_pile {len(self.draw_pile)}  discard_pile {len(self.discard_pile)}  exhaust_pile {len(self.exhaust_pile)}')
             if len(self.draw_pile) == 0:
-                for __ in range(len(self.discard_pile)):
-                    card = self.discard_pile.draw()
-                    self.draw_pile.insert(card)
+                for card in self.discard_pile.cards.copy():
+                    card.move_to(self.draw_pile)
                 self.draw_pile.shuffle()
+                # for __ in range(len(self.discard_pile)):
+                #     card = self.discard_pile.draw()
+                #     self.draw_pile.insert(card)
+                # self.draw_pile.shuffle()
             if len(self.draw_pile) > 0:
-                card = self.draw_pile.draw()
-                card.on_draw()
-                self.hand_pile.insert(card)
+                self.draw_pile.draw().move_to(self.hand_pile).on_draw()
+                # card = self.draw_pile.draw()
+                # card.on_draw()
+                # self.hand_pile.insert(card)
 
     def num_turn_draw(self) -> int:
         return 5
@@ -89,20 +96,25 @@ class Character(Target):
     
     def has_playable_card(self) -> bool:
         for card in self.hand_pile:
-            if card.energy <= self.energy:
+            if card.cost <= self.energy:
                 return True
         return False
 
     def can_play_card(self, card_id: int) -> bool:
-        return card_id >= 0 and card_id < len(self.hand_pile) and self.energy >= self.hand_pile.cards[card_id].cost
+        return card_id >= 0 and card_id < len(self.hand_pile) and \
+                self.hand_pile.cards[card_id].cost is None or self.energy >= self.hand_pile.cards[card_id].cost
 
     def play_card(self, card_index: int) -> None:
         if not self.can_play_card(card_index):
             print("punish")
             return
-        self.playing_card = self.hand_pile.draw_index(card_index)
-        self.energy -= self.playing_card.cost
-        if self.playing_card.play():
+        self.playing_card = self.hand_pile.draw_index(card_index).move_to(None)
+        used_energy = self.energy
+        if self.playing_card is None:
+            self.energy = 0
+        else:
+            self.energy -= self.playing_card.cost
+        if self.playing_card.play(used_energy):
             self.playing_card = None
 
     def choose_in_card(self, card_id: int) -> None:

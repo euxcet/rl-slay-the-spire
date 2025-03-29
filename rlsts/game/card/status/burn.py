@@ -10,5 +10,5 @@ class Burn(Card):
             is_ethereal=True,
         )
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         ...

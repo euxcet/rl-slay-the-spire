@@ -1,22 +1,22 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class SeverSoul(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage: int = 16) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Attack,
-            cost=0,
+            cost=2,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        for card in self.combat.character.hand_pile:
+            if card.type != CardType.Attack:
+                card.exhaust()
 
 class SeverSoulPlus(SeverSoul):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(damage=22)

@@ -43,6 +43,8 @@ class Target(ABC):
         self.block += block
 
     def receive_damage(self, damage: int) -> int:
+        if self.died:
+            return 0
         damage = self.estimate_received_damage(damage)
         if damage <= 0:
             return 0
@@ -62,12 +64,14 @@ class Target(ABC):
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
-        if new_effect.stack == 0:
+        if self.died or new_effect.stack == 0:
             return
         new_effect.target = self
         for effect in self.effects:
             if type(effect) == type(new_effect):
                 effect.stack += new_effect.stack
+                if effect.stack == 0:
+                    self.update_effects()
                 return
         self.effects.append(new_effect)
 
@@ -84,3 +88,14 @@ class Target(ABC):
             damage = effect.modify_received_damage(damage)
         # TODO: relics ...
         return damage
+
+    def has_effect(self, effect_type: type) -> int:
+        for effect in self.effects:
+            if isinstance(effect, effect_type):
+                return effect.stack
+        return 0
+
+    def lose_hp(self, hp: int) -> int:
+        self.hp -= hp
+        if self.hp <= 0:
+            self.die()

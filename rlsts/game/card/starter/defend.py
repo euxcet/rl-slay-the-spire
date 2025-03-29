@@ -10,7 +10,7 @@ class Defend(Card):
         )
         self.block = block
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         self.add_block(self.block)
 
 class DefendPlus(Defend):

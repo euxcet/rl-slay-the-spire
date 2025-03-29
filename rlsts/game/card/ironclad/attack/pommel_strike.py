@@ -1,9 +1,7 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class PommelStrike(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage: int = 9, draw: int = 1) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Attack,
@@ -11,12 +9,13 @@ class PommelStrike(Card):
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage
+        self.draw = draw
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.combat.character.draw(self.draw)
 
 class PommelStrikePlus(PommelStrike):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(damage=10, draw=2)

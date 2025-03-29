@@ -12,7 +12,7 @@ class PowerThrough(Card):
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
         self.combat.character.discard_pile.insert(deepcopy(self))

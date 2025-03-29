@@ -10,7 +10,7 @@ class Strike(Card):
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         self.attack(self.get_enemy(self.targets[0]), self.damage)
 
 class StrikePlus(Strike):

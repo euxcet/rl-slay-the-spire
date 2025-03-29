@@ -1,22 +1,22 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Pummel(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, times: int = 4) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Attack,
-            cost=0,
+            cost=1,
             target_types=[CardTargetType.Enemy],
+            is_exhaust=True,
         )
-        self.damage = damage
+        self.damage = 2
+        self.times = times
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        for _ in range(self.times):
+            self.attack(enemy, self.damage)
 
 class PummelPlus(Pummel):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(times=5)

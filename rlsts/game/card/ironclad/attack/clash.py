@@ -1,9 +1,7 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Clash(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage: int = 14) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Attack,
@@ -12,11 +10,17 @@ class Clash(Card):
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+
+    @property
+    def is_unplayable(self) -> bool:
+        for card in self.combat.character.hand_pile:
+            if card.type != CardType.Attack:
+                return True
+        return False
 
 class ClashPlus(Clash):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(damage=18)

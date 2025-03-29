@@ -1,21 +1,21 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
+from ....effect import Vulnerable
 
 class Dropkick(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, damage: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Attack,
-            cost=0,
+            cost=1,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
+        if enemy.has_effect(Vulnerable):
+            self.combat.character.energy += 1
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
 
 class DropkickPlus(Dropkick):
     def __init__(self) -> None:

@@ -10,7 +10,7 @@ class BodySlam(Card):
             target_types=[CardTargetType.Enemy],
         )
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.combat.character.block)
 

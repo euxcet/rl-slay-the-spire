@@ -1,4 +1,3 @@
-# TODO
 from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
@@ -12,10 +11,10 @@ class Anger(Card):
         )
         self.damage = damage
 
-    def finish(self) -> None:
+    def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        deepcopy(self).move_to(self.discard_pile)
 
 class AngerPlus(Anger):
     def __init__(self) -> None:

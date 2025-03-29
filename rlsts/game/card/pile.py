@@ -29,13 +29,25 @@ class Pile():
     
     def draw_index(self, index: int) -> Card:
         return self.cards.pop(index)
+
+    def remove(self, card: Card) -> None:
+        self.cards.remove(card)
     
     # TODO: insert at the beginning?
     def insert(self, card: Card) -> None:
         self.cards.append(card)
+        card.pile = self
 
     def shuffle_into(self, card: Card) -> None:
         self.cards.insert(random.randint(0, len(self.cards)), card)
+
+    def extend(self, cards: list[Card]) -> None:
+        for card in cards:
+            card.pile = self
+        self.cards.extend(cards)
+
+    def clear(self) -> None:
+        self.cards.clear()
 
     def __len__(self) -> int:
         return len(self.cards)
