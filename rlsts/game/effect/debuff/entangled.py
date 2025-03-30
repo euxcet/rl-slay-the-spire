@@ -2,9 +2,10 @@ from .debuff import Debuff
 from ..buff.dexterity import Dexterity
 
 from typing import TYPE_CHECKING
+from ...card.card import CardType
 if TYPE_CHECKING:
     from ...combat import Combat
-    from ...card.card import Card, CardType
+    from ...card.card import Card
 
 class Entangled(Debuff):
     def __init__(
