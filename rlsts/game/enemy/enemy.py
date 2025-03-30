@@ -23,10 +23,6 @@ class Enemy(Target):
     def get_intent(self, turn: int) -> Intent:
         ...
 
-    def to(self, combat: Combat) -> Enemy:
-        self.combat = combat
-        return self
-
     def perform(self) -> None:
         intent: Intent = self.get_intent()
         self.intent_history.append(intent)

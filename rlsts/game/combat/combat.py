@@ -55,7 +55,7 @@ class Combat():
             # end turn
             mask[0] = 1
             for i, card in enumerate(self.character.hand_pile):
-                if not card.is_unplayable and card.cost <= self.character.energy:
+                if not card.is_unplayable and (card.cost is None or card.cost <= self.character.energy):
                     mask[i + 1] = all(effect.can_play_card(card) for effect in self.character.effects)
             return mask
 
