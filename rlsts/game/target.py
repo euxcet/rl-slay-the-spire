@@ -21,6 +21,7 @@ class Target(ABC):
     def start_combat(self, combat: 'Combat') -> Target:
         self.combat = combat
         self.effects.clear()
+        self.num_lose_hp = 0
         return self
 
     def die(self) -> None:
@@ -54,6 +55,7 @@ class Target(ABC):
             return 0
         damage -= self.block
         self.block = 0
+        self.num_lose_hp += 1
         if damage >= self.hp:
             hp = self.hp
             self.die()
@@ -97,5 +99,6 @@ class Target(ABC):
 
     def lose_hp(self, hp: int) -> int:
         self.hp -= hp
+        self.num_lose_hp += 1
         if self.hp <= 0:
             self.die()

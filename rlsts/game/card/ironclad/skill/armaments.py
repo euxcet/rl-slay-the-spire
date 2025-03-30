@@ -1,5 +1,4 @@
-from ... import upgrade
-from ...card import Card, CardRarity, CardType, CardTargetType
+from ...card import Card, CardRarity, CardType, CardTargetType, upgrade
 
 class Armaments(Card):
     def __init__(self) -> None:

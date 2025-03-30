@@ -1,10 +1,11 @@
 from .character import Character, Ironclad
+from .card import Deck
 from .enemy import Cultist, JawWorm
 from .combat import Combat, Act1EasyCombat, Act1HardCombat
 
 class SlayTheSpire():
     def __init__(self, character: Character = None) -> None:
-        self.character = character or Ironclad()
+        self.character = character or Ironclad(Deck.ironclad_random_deck())
 
     def get_combat(self, enemies: list[type]) -> Combat:
         return Combat(character=self.character, enemies_type=enemies)

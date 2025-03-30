@@ -1,5 +1,6 @@
 from .intent import Intent
 from typing import TYPE_CHECKING
+from ...effect.debuff.entangled import Entangled
 if TYPE_CHECKING:
     from .. import Enemy
 
@@ -8,5 +9,4 @@ class RedSlaverEntangleIntent(Intent):
         super().__init__(enemy=enemy, values=values)
 
     def perform(self) -> None:
-        # TODO
-        ...
+        self.enemy.combat.character.receive_effect(Entangled(self.enemy.combat, self.values[0]))

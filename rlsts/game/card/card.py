@@ -46,7 +46,7 @@ class Card(ABC):
     ) -> None:
         self.rarity = rarity
         self.type = type
-        self.cost = cost
+        self._cost = cost
         self.origin_cost = cost
         self._is_unplayable = is_unplayable
         self.is_ethereal = is_ethereal
@@ -57,6 +57,14 @@ class Card(ABC):
         self.pile: Pile = None
         # for x
         self.energy = 0
+
+    @property
+    def cost(self) -> int:
+        return self._cost
+    
+    @cost.setter
+    def cost(self, c: int) -> None:
+        self._cost = c
 
     @property
     def is_unplayable(self) -> bool:
@@ -198,3 +206,11 @@ class Card(ABC):
 
     def effect_enemy(self, enemy: Enemy, effect: 'Effect') -> None:
         enemy.receive_effect(effect)
+
+def upgrade(card: Card) -> Card:
+    if card.__class__.__name__.endswith('Plus'):
+        return card
+    card_plus_class = globals().get(card.__class__.__name__ + 'Plus')
+    upgraded: Card = card_plus_class()
+    upgraded.cost = card.cost
+    return upgraded

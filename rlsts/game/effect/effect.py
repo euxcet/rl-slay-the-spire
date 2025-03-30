@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..combat import Combat
     from ..target import Target
+    from ..card import Card
 
 class Effect():
     # TODO: ID
@@ -28,6 +29,9 @@ class Effect():
     def modify_block(self, block: int) -> int:
         return block
 
+    def modify_num_draw(self, num: int) -> int:
+        return num
+
     def on_turn_end(self) -> None:
         ...
 
@@ -36,3 +40,9 @@ class Effect():
 
     def on_attack(self) -> None:
         ...
+
+    def on_draw(self, card: 'Card') -> 'Card':
+        return card
+
+    def can_play_card(self, card: 'Card') -> bool:
+        return True

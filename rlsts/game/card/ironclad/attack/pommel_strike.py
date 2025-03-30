@@ -5,7 +5,7 @@ class PommelStrike(Card):
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Attack,
-            cost=0,
+            cost=1,
             target_types=[CardTargetType.Enemy],
         )
         self.damage = damage

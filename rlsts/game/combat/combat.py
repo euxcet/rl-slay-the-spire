@@ -5,7 +5,7 @@ from ..enemy import Enemy
 from copy import deepcopy
 
 class Combat():
-    MAX_ACTION = 10
+    MAX_ACTION = 15
 
     def __init__(
         self,
@@ -52,10 +52,11 @@ class Combat():
             return self.character.playing_card.get_action_mask(self.MAX_ACTION)
         else:
             mask = np.zeros((self.MAX_ACTION,), dtype=np.float32)
+            # end turn
             mask[0] = 1
             for i, card in enumerate(self.character.hand_pile):
                 if not card.is_unplayable and card.cost <= self.character.energy:
-                    mask[i + 1] = 1
+                    mask[i + 1] = all(effect.can_play_card(card) for effect in self.character.effects)
             return mask
 
     def observe(self, initial_hp: int = None, error: str = None) -> CombatObservation:

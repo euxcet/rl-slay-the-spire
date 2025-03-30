@@ -1,11 +1,11 @@
-from .buff import Buff
-from .strength import Strength
+from .debuff import Debuff
+from ..buff.strength import Strength
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...combat import Combat
 
-class FlexStrength(Buff):
+class StrengthDown(Debuff):
     def __init__(
         self,
         combat: 'Combat',

@@ -42,7 +42,7 @@ class Character(Target):
     def start_combat(self, combat: 'Combat') -> None:
         super().start_combat(combat)
         self.orientation = 0
-        self.draw_pile = Pile(deck=self.deck, combat=combat)
+        self.draw_pile = Pile(cards=self.deck.cards, combat=combat)
         self.draw_pile.shuffle()
         self.hand_pile = Pile()
         self.exhaust_pile = Pile()
@@ -58,10 +58,6 @@ class Character(Target):
         self.energy = 0
         for card in self.hand_pile.cards.copy():
             card.discard(is_turn_end=True)
-        # for _ in range(len(self.hand_pile)):
-        #     card = self.hand_pile.draw()
-        #     card.on_turn_discard()
-        #     self.discard_pile.insert(card)
 
     def die(self) -> None:
         super().die()
@@ -70,23 +66,18 @@ class Character(Target):
 
     def draw(self, num: int) -> None:
         for _ in range(num):
-            # print(f'Draw draw_pile {len(self.draw_pile)}  discard_pile {len(self.discard_pile)}  exhaust_pile {len(self.exhaust_pile)}')
             if len(self.draw_pile) == 0:
                 for card in self.discard_pile.cards.copy():
                     card.move_to(self.draw_pile)
                 self.draw_pile.shuffle()
-                # for __ in range(len(self.discard_pile)):
-                #     card = self.discard_pile.draw()
-                #     self.draw_pile.insert(card)
-                # self.draw_pile.shuffle()
             if len(self.draw_pile) > 0:
                 self.draw_pile.draw().move_to(self.hand_pile).on_draw()
-                # card = self.draw_pile.draw()
-                # card.on_draw()
-                # self.hand_pile.insert(card)
 
     def num_turn_draw(self) -> int:
-        return 5
+        num = 5
+        for effect in self.effects:
+            num = effect.modify_num_draw(num)
+        return num
 
     def num_turn_energy(self) -> int:
         return 3
@@ -129,6 +120,3 @@ class Character(Target):
 
     def add_cards(self, cards: list['Card']) -> None:
         self.deck.add_cards(cards)
-
-    # def remove_card(self, card):
-    #     ...

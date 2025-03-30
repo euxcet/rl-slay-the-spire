@@ -8,7 +8,7 @@ from ..game.combat import Combat, CombatObservation, random_combat
 from ..game.character import Ironclad
 from ..game.enemy import Cultist
 from ..game.enemy.intent import intent_collection
-from ..game.card import card_collection, CardTargetType
+from ..game.card import card_collection, CardTargetType, Deck
 from ..game.enemy import enemy_collection
 from ..game.enemy.intent import intent_collection
 from ..game.effect import effect_collection, Effect
@@ -26,7 +26,7 @@ class CombatEnv(gym.Env):
 
     def __init__(self, config: Optional[dict] = None) -> None:
         config = config or {}
-        self.game = random_combat(Ironclad())
+        self.game = random_combat(Ironclad(Deck.ironclad_random_deck()))
         self.observation_space = Dict({
             "character_hp": Box(low=0, high=1, shape=(1,), dtype=np.float32),
             # "character_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),

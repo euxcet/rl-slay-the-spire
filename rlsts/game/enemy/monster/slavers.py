@@ -34,7 +34,7 @@ class RedSlaver(Enemy):
             ])
         else:
             if self.intent_pool.peek(self.combat.turn) < 0.25:
-                return RedSlaverEntangleIntent(self, [])
+                return RedSlaverEntangleIntent(self, [1])
             else:
                 if self.combat.turn % 3 == 0:
                     return AttackIntent(self, [self.damage, 1])

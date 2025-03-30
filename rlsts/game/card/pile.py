@@ -6,17 +6,16 @@ if TYPE_CHECKING:
     from ..combat import Combat
 
 from .card import Card
-from .deck import Deck
 
 class Pile():
     def __init__(
         self,
-        deck: Deck = None,
+        cards: list[Card] = None,
         combat: 'Combat' = None,
     ) -> None:
         self.cards: list[Card] = []
-        if deck is not None:
-            self.cards = deepcopy(deck.cards)
+        if cards is not None:
+            self.cards = deepcopy(cards)
         if combat is not None:
             for card in self.cards:
                 card.combat = combat
