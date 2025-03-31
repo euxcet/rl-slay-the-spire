@@ -1,5 +1,5 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
-from ....effect import Vulnerable
+from ....effect.debuff.vulnerable import Vulnerable
 
 class Bash(Card):
     def __init__(self, damage: int = 6, debuff: int = 2) -> None:

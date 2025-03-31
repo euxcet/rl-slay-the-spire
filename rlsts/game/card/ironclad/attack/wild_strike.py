@@ -14,7 +14,7 @@ class WildStrike(Card):
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        self.combat.character.draw_pile.insert(Wound().to(self.combat))
+        self.draw_pile.insert(Wound().to(self.combat))
 
 class WildStrikePlus(WildStrike):
     def __init__(self) -> None:

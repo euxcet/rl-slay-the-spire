@@ -14,8 +14,8 @@ class SwordBoomerang(Card):
 
     def finish(self, energy: int) -> None:
         for _ in range(self.times):
-            if len(self.combat.enemies) > 0:
-                self.attack(random.choice(self.combat.enemies), self.damage)
+            if len(self.enemies) > 0:
+                self.attack(random.choice(self.enemies), self.damage)
 
 class SwordBoomerangPlus(SwordBoomerang):
     def __init__(self) -> None:

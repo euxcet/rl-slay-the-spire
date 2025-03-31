@@ -29,24 +29,34 @@ class Target(ABC):
         self.died = True
 
     def start_turn(self) -> None:
-        self.block = 0
+        for effect in self.effects:
+            effect.on_turn_start()
+        remove_block = self.block
+        for effect in self.effects:
+            remove_block = effect.modify_remove_block_turn(remove_block)
+        self.block -= remove_block
+        self.update_effects()
 
     def end_turn(self) -> None:
         for effect in self.effects:
             effect.on_turn_end()
-        for effect in self.effects:
-            effect.stack -= effect.decrease_per_turn
         self.update_effects()
 
-    def add_block(self, block: int) -> int:
-        for effect in self.effects:
-            block = effect.modify_block(block)
+    def add_block(self, block: int, do_effect: bool = True) -> int:
+        if do_effect:
+            for effect in self.effects:
+                block = effect.modify_block(block)
         self.block += block
+        for effect in self.effects:
+            effect.on_block(block)
 
-    def receive_damage(self, damage: int) -> int:
+    def receive_damage(self, damage: int, attacker: Target, do_effect: bool = True) -> int:
         if self.died:
             return 0
-        damage = self.estimate_received_damage(damage)
+        for effect in self.effects:
+            effect.on_attacked(damage, attacker)
+        if do_effect:
+            damage = self.estimate_received_damage(damage)
         if damage <= 0:
             return 0
         # TODO: relics ...
@@ -62,7 +72,7 @@ class Target(ABC):
             return hp
         self.hp -= damage
         for effect in self.effects:
-            effect.on_receive_damage(damage)
+            effect.on_receive_damage(damage, attacker)
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
@@ -71,7 +81,8 @@ class Target(ABC):
         new_effect.target = self
         for effect in self.effects:
             if type(effect) == type(new_effect):
-                effect.stack += new_effect.stack
+                effect.merge(new_effect)
+                # effect.set_stack(effect.stack + new_effect.stack)
                 if effect.stack == 0:
                     self.update_effects()
                 return
@@ -92,13 +103,22 @@ class Target(ABC):
         return damage
 
     def has_effect(self, effect_type: type) -> int:
-        for effect in self.effects:
-            if isinstance(effect, effect_type):
-                return effect.stack
+        if (effect := self.get_effect(effect_type)) != None:
+            return effect.stack
         return 0
 
+    def get_effect(self, effect_type: type) -> Effect:
+        for effect in self.effects:
+            if isinstance(effect, effect_type):
+                return effect
+        return None
+
     def lose_hp(self, hp: int) -> int:
-        self.hp -= hp
-        self.num_lose_hp += 1
-        if self.hp <= 0:
-            self.die()
+        if hp > 0:
+            self.hp -= hp
+            self.num_lose_hp += 1
+            if self.hp <= 0:
+                self.die()
+            else:
+                for effect in self.effects:
+                    effect.on_lose_hp(hp)

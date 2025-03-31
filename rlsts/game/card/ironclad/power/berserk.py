@@ -1,22 +1,21 @@
-# TODO
-from copy import deepcopy
-from ...card import Card, CardRarity, CardType, CardTargetType
+from ...card import Card, CardRarity, CardType
+from ....effect.buff.berserk_buff import BerserkBuff
+from ....effect.debuff.vulnerable import Vulnerable
 
 class Berserk(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, debuff: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Power,
             cost=0,
-            target_types=[CardTargetType.Enemy],
+            target_types=[],
         )
-        self.damage = damage
+        self.debuff = debuff
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.effect_character(Vulnerable(self.combat, self.debuff))
+        self.effect_character(BerserkBuff(self.combat, 1))
 
 class BerserkPlus(Berserk):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(debuff=1)

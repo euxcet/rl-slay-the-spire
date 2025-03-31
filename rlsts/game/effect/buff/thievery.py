@@ -12,5 +12,5 @@ class Thievery(Buff):
     ) -> None:
         super().__init__(combat=combat, stack=stack, decrease_per_turn=0)
 
-    def on_attack(self) -> None:
+    def on_attack(self, damage: int) -> None:
         self.combat.character.remove_gold(self.stack)

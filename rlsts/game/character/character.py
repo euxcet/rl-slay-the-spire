@@ -36,8 +36,8 @@ class Character(Target):
     # TODO: move to Card
     def attack(self, enemy: 'Enemy', damage: int) -> int:
         for effect in self.effects:
-            effect.on_attack()
-        return enemy.receive_damage(self.prepare_attack(damage))
+            effect.on_attack(damage)
+        return enemy.receive_damage(self.prepare_attack(damage), self)
 
     def start_combat(self, combat: 'Combat') -> None:
         super().start_combat(combat)
@@ -71,16 +71,26 @@ class Character(Target):
                     card.move_to(self.draw_pile)
                 self.draw_pile.shuffle()
             if len(self.draw_pile) > 0:
-                self.draw_pile.draw().move_to(self.hand_pile).on_draw()
+                self.draw_to_hand(self.draw_pile.draw())
+
+    def draw_to_hand(self, card: 'Card') -> None:
+        if len(self.hand_pile) == self.combat.MAX_NUM_HAND_CARDS:
+            # TODO: trigger on_draw?
+            card.move_to(self.discard_pile)
+        else:
+            card.move_to(self.hand_pile)
 
     def num_turn_draw(self) -> int:
         num = 5
         for effect in self.effects:
-            num = effect.modify_num_draw(num)
+            num = effect.modify_turn_draw(num)
         return num
 
     def num_turn_energy(self) -> int:
-        return 3
+        num = 3
+        for effect in self.effects:
+            num = effect.modify_turn_energy(num)
+        return num
 
     def is_card_playing(self) -> bool:
         return self.playing_card is not None
@@ -101,7 +111,7 @@ class Character(Target):
             return
         self.playing_card = self.hand_pile.draw_index(card_index).move_to(None)
         used_energy = self.energy
-        if self.playing_card is None:
+        if self.playing_card.cost is None:
             self.energy = 0
         else:
             self.energy -= self.playing_card.cost

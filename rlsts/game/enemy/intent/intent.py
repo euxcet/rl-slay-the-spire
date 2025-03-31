@@ -10,6 +10,9 @@ class Intent(ABC):
         self.values = values
         self.history = []
     
+    def is_attack(self) -> bool:
+        return False
+
     def perform(self) -> None:
         ...
 

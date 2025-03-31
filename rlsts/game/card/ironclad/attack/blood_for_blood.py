@@ -16,7 +16,13 @@ class BloodForBlood(Card):
 
     @property
     def cost(self) -> int:
+        if self.combat == None:
+            return self._cost
         return max(self._cost - self.combat.character.num_lose_hp, 0)
+
+    @cost.setter
+    def cost(self, c: int) -> None:
+        self._cost = c
 
 class BloodForBloodPlus(BloodForBlood):
     def __init__(self) -> None:

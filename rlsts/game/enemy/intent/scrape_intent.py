@@ -10,6 +10,9 @@ class ScrapeIntent(Intent):
         super().__init__(enemy=enemy, values=values)
         self.values[0] = enemy.estimate_attack(self.values[0])
 
+    def is_attack(self) -> bool:
+        return True
+
     def get_damage(self) -> int:
         return self.values[0]
 

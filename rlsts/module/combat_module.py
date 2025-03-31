@@ -10,7 +10,7 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
 
     @override(TorchRLModule)
     def setup(self) -> None:
-        input_dim = 2277
+        input_dim = 2476
         output_dim = self.action_space.n
         self._policy_net = torch.nn.Sequential(
             Linear(input_dim, 128),
@@ -24,7 +24,11 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
         self._value_net = torch.nn.Sequential(
             Linear(input_dim, 128),
             ReLU(),
-            Linear(128, 1),
+            Linear(128, 64),
+            ReLU(),
+            Linear(64, 32),
+            ReLU(),
+            Linear(32, 1),
         )
 
     def _get_input_tensor(self, batch):
@@ -45,6 +49,7 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
         playing_card: torch.Tensor = obs['playing_card']
         playing_card_step: torch.Tensor = obs['playing_card_step']
         card_target_type: torch.Tensor = obs['card_target_type']
+        sum_enemies_attack: torch.Tensor = obs['sum_enemies_attack']
 
         #     "character_hp": (1,),
         #     "character_max_hp": (1,),
@@ -79,7 +84,13 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
             playing_card.flatten(start_dim=1),
             playing_card_step.flatten(start_dim=1),
             card_target_type.flatten(start_dim=1),
+            sum_enemies_attack.flatten(start_dim=1),
         ), dim=1)
+        # mask: torch.Tensor = obs['action_mask']
+        # print(mask.sum(dim=1))
+        # exit(0)
+        # mask_sum = sum(obs['action_mask'])
+        # print(mask_sum)
         return input_tensor, obs['action_mask']
 
     def _mask_action_logits(self, batch: dict, action_mask: torch.Tensor) -> dict:

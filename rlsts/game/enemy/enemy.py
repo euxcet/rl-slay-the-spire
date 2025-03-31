@@ -37,8 +37,8 @@ class Enemy(Target):
 
     def attack(self, damage: int) -> int:
         for effect in self.effects:
-            effect.on_attack()
-        return self.combat.character.receive_damage(self.prepare_attack(damage))
+            effect.on_attack(damage)
+        return self.combat.character.receive_damage(self.prepare_attack(damage), self)
 
     # intent, chance, continuous_limit
     def choose_intent(self, options: list[tuple[Intent, float, int]]) -> Intent:

@@ -12,6 +12,9 @@ class SmashIntent(Intent):
         if len(self.values) == 2:
             self.values.append(0)
 
+    def is_attack(self) -> bool:
+        return True
+
     def get_damage(self) -> int:
         return self.values[0]
 

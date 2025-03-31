@@ -12,7 +12,7 @@ class Immolate(Card):
         self.damage = damage
 
     def finish(self, energy: int) -> None:
-        for enemy in self.combat.enemies:
+        for enemy in self.combat.enemies.copy():
             self.attack(enemy, self.damage)
         Burn().to(self.combat).move_to(self.discard_pile)
 

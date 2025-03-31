@@ -1,22 +1,24 @@
-# TODO
-from copy import deepcopy
+import pydash as _
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class TrueGrit(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, block: int = 7) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.block = block
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.add_block(self.block)
+        if len(self.targets) == 0:
+            _.invoke(self.choose_hand_card(), 'exhaust')
+        else:
+            _.invoke(self.choose_hand_card(self.targets[0]), 'exhaust')
 
 class TrueGritPlus(TrueGrit):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(block=9)
+        self.target_types = [CardTargetType.Hand]

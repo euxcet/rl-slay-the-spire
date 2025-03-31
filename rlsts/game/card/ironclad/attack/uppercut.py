@@ -1,5 +1,6 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
-from ....effect import Vulnerable, Weak
+from ....effect.debuff.vulnerable import Vulnerable
+from ....effect.debuff.weak import Weak
 
 class Uppercut(Card):
     def __init__(self, weak: int = 1, vulnerable: int = 1) -> None:

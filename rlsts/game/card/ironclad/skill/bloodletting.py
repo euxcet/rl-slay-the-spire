@@ -1,22 +1,20 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Bloodletting(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, energy: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Attack,
+            rarity=CardRarity.Uncommon,
+            type=CardType.Skill,
             cost=0,
-            target_types=[CardTargetType.Enemy],
+            target_types=[],
         )
-        self.damage = damage
+        self.energy = energy
+        self.hp = 3
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.character.energy += self.energy
+        self.character.lose_hp(self.hp)
 
 class BloodlettingPlus(Bloodletting):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(energy=3)

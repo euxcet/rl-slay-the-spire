@@ -113,25 +113,90 @@ class Deck():
 
     @staticmethod
     def ironclad_random_deck() -> Deck:
+        card_types = {
+            "strike": ([Strike], random.randint(3, 5), 10, 0),
+            
+            "defend": ([Defend], random.randint(5, 5), 10, 0),
+
+            "bash": ([Bash], random.randint(1, 1), 10, 0),
+
+            "attack": ([
+                Anger, BodySlam, Clash, Cleave, Clothesline, Headbutt,
+                IronWave, PommelStrike, SwordBoomerang, Thunderclap, TwinStrike,
+                WildStrike, BloodForBlood, Carnage, Dropkick, Hemokinesis,
+                Pummel, Rampage, RecklessCharge, SeverSoul, Uppercut,
+                Whirlwind, Bludgeon, FiendFire, Immolate,
+                # TODO: HeavyBlade Feed Reaper SearingBlow
+            ], random.randint(0, 4), 2, 0.1),
+
+            "skill": ([
+                Armaments, BattleTrance, Bloodletting, BurningPact, Disarm,
+                DualWield, Entrench, Exhume, FlameBarrier, Flex, GhostlyArmor,
+                Havoc, Impervious, InfernalBlade, Intimidate, LimitBreak, Offering,
+                PowerThrough, Rage, SecondWind, SeeingRed, Sentinel, Shockwave,
+                ShrugItOff, SpotWeakness, TrueGrit, Warcry,
+                # TODO: DoubleTap InfernalBlade
+            ], random.randint(0, 4), 2, 0.1),
+
+            "power": ([
+                Juggernaut, Evolve, DemonForm, Rupture, Brutality, DarkEmbrace,
+                Corruption, FireBreathing, Metallicize, Inflame, Berserk,
+                Barricade, Combust, FeelNoPain
+            ], random.randint(0, 3), 2, 0.1),
+        }
+
         cards = []
-        for i in range(random.randint(3, 5)):
-            cards.append(Strike())
-        for i in range(random.randint(3, 4)):
-            cards.append(Defend())
-        cards.append(Bash())
+        for k, v in card_types.items():
+            types, num, duplicate, upgrade_p = v
+            for i in range(num):
+                while True:
+                    card_type = random.choice(types)
+                    if sum(map(lambda x: isinstance(x, card_type), cards)) < duplicate:
+                        if random.random() < upgrade_p:
+                            from . import upgrade
+                            cards.append(upgrade(card_type()))
+                        else:
+                            cards.append(card_type())
+                        break
 
-        attack_card_types = [
-            Anger, BodySlam, Clash, Cleave, Clothesline, Headbutt,
-            IronWave, PommelStrike, SwordBoomerang, Thunderclap, TwinStrike,
-            WildStrike, BloodForBlood, Carnage, Dropkick, Hemokinesis,
-            Pummel, Rampage, RecklessCharge, SeverSoul, Uppercut,
-            Whirlwind, Bludgeon, FiendFire, Immolate
-        ]
 
-        for i in range(random.randint(0, 4)):
-            while True:
-                card_type = random.choice(attack_card_types)
-                if sum(map(lambda x: isinstance(x, card_type), cards)) <= 1:
-                    cards.append(card_type())
-                    break
+        # num_strike = random.randint(3, 5)
+        # num_defend = random.randint(3, 4)
+        # num_bash = random.randint(1, 1)
+        # num_attack = random.randint(0, 5)
+        # num_attack_duplicate = 2
+        # num_skill = random.randint(0, 5)
+        # num_skill_duplicate = 2
+        # num_power = random.randint(0, 1)
+        # num_power_duplicate = 2
+
+        # cards = []
+        # for i in range(num_strike):
+        #     cards.append(Strike())
+        # for i in range(num_defend):
+        #     cards.append(Defend())
+        # for i in range(num_bash):
+        #     cards.append(Bash())
+
+        # for i in range(num_attack):
+        #     while True:
+        #         card_type = random.choice(attack_card_types)
+        #         if sum(map(lambda x: isinstance(x, card_type), cards)) < num_attack_duplicate:
+        #             cards.append(card_type())
+        #             break
+
+        # for i in range(num_skill):
+        #     while True:
+        #         card_type = random.choice(skill_card_types)
+        #         if sum(map(lambda x: isinstance(x, card_type), cards)) <= num_skill_duplicate:
+        #             cards.append(card_type())
+        #             break
+
+        # for i in range(num_power):
+        #     while True:
+        #         card_type = random.choice(power_card_types)
+        #         if sum(map(lambda x: isinstance(x, card_type), cards)) <= num_power_duplicate:
+        #             cards.append(card_type())
+        #             break
+
         return Deck(cards)

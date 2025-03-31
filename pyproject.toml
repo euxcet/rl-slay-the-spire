@@ -12,6 +12,7 @@ ray = {extras = ["rllib"], version = "^2.43.0"}
 pytest = "^8.3.5"
 rich = "^13.9.4"
 pillow = "^11.1.0"
+pydash = "^8.0.5"
 
 
 [build-system]

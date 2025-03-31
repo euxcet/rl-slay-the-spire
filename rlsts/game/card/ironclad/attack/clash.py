@@ -16,7 +16,7 @@ class Clash(Card):
 
     @property
     def is_unplayable(self) -> bool:
-        for card in self.combat.character.hand_pile:
+        for card in self.hand_pile:
             if card.type != CardType.Attack:
                 return True
         return False

@@ -1,22 +1,20 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
+from ....effect.buff.strength import Strength
 
 class LimitBreak(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, is_exhaust: bool = True) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
-        )
-        self.damage = damage
+            cost=1,
+            target_types=[],
+            is_exhaust=is_exhaust,
+       )
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        if (effect := self.character.get_effect(Strength)) != None:
+            effect.set_stack(effect.stack * 2)
 
 class LimitBreakPlus(LimitBreak):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(is_exhaust=True)

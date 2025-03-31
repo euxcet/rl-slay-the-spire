@@ -45,7 +45,7 @@ class ShieldGremlin(Enemy):
         if self.target is not None and not self.target.died:
             return ShieldGremlinProtectIntent(self, [self.target, self.protect])
         if self.target is not None:
-            return ShieldGremlinProtectIntent(self, [self.target, self])
+            return ShieldGremlinProtectIntent(self, [self, self.protect])
         return AttackIntent(self, [self.damage, 1])
 
 class SneakyGremlin(Enemy):

@@ -1,22 +1,21 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class SecondWind(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, block: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.block = block
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        for card in self.hand_pile.cards.copy():
+            if card.type != CardType.Attack:
+                card.exhaust()
+                self.add_block(self.block)
 
 class SecondWindPlus(SecondWind):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(block=7)

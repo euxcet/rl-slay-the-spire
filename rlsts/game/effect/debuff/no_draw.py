@@ -11,6 +11,7 @@ class NoDraw(Debuff):
         stack: int,
     ) -> None:
         super().__init__(combat=combat, stack=stack, decrease_per_turn=1)
+        self.max_stack = 1
 
-    def modify_num_draw(self, num: int) -> int:
+    def modify_turn_draw(self, num: int) -> int:
         return 0

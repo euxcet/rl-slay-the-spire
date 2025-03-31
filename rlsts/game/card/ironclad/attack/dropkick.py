@@ -1,5 +1,5 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
-from ....effect import Vulnerable
+from ....effect.debuff.vulnerable import Vulnerable
 
 class Dropkick(Card):
     def __init__(self, damage: int = 5) -> None:
@@ -14,7 +14,7 @@ class Dropkick(Card):
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         if enemy.has_effect(Vulnerable):
-            self.combat.character.energy += 1
+            self.character.energy += 1
         self.attack(enemy, self.damage)
 
 class DropkickPlus(Dropkick):

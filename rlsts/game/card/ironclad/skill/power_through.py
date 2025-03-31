@@ -1,22 +1,22 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
+from ...status.wound import Wound
 
 class PowerThrough(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, block: int = 15) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.block = block
+        self.wound = 2
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        for num in range(self.wound):
+            self.character.draw_to_hand(Wound().to(self.combat))
+        self.add_block(self.block)
 
 class PowerThroughPlus(PowerThrough):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(block=20)

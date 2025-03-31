@@ -22,7 +22,7 @@ from .env.combat_env import CombatEnv
 from .module.combat_module import CombatModule
 
 def train():
-    ray.init(num_cpus=4, ignore_reinit_error=True)
+    ray.init(ignore_reinit_error=True)
     config = (
         PPOConfig()
         .framework("torch")
@@ -46,7 +46,7 @@ def train():
             ),
         )
         .training(
-            train_batch_size=8192,
+            train_batch_size=16384,
             minibatch_size=128,
             entropy_coeff=0.01,
             kl_coeff=0.2,

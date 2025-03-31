@@ -1,5 +1,5 @@
 from ...card import Card, CardRarity, CardType
-from ....effect import Vulnerable
+from ....effect.debuff.vulnerable import Vulnerable
 
 class Thunderclap(Card):
     def __init__(self, damage: int = 4) -> None:
@@ -12,7 +12,7 @@ class Thunderclap(Card):
         self.damage = damage
 
     def finish(self, energy: int) -> None:
-        for enemy in self.combat.enemies:
+        for enemy in self.enemies.copy():
             self.attack(enemy, self.damage)
             self.effect_enemy(enemy, Vulnerable(self.combat, 1))
 

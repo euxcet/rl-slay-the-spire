@@ -13,7 +13,7 @@ class SeverSoul(Card):
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        for card in self.combat.character.hand_pile:
+        for card in self.hand_pile.cards.copy():
             if card.type != CardType.Attack:
                 card.exhaust()
 

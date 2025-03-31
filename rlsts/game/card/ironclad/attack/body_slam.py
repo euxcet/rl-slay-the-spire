@@ -12,7 +12,7 @@ class BodySlam(Card):
 
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.combat.character.block)
+        self.attack(enemy, self.character.block)
 
 class BodySlamPlus(BodySlam):
     def __init__(self) -> None:

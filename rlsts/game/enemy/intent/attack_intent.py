@@ -9,6 +9,9 @@ class AttackIntent(Intent):
         self.values[0] = enemy.estimate_attack(self.values[0])
         if len(self.values) == 1:
             self.values.append(1)
+
+    def is_attack(self) -> bool:
+        return True
         
     def get_damage(self) -> int:
         return self.values[0] * self.values[1]

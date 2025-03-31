@@ -1,5 +1,5 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
-from ....effect import Weak
+from ....effect.debuff.weak import Weak
 
 class Clothesline(Card):
     def __init__(self, damage: int = 12, debuff: int = 2) -> None:

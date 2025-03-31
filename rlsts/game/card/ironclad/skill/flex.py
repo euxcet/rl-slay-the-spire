@@ -1,5 +1,4 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
-from ....effect import Strength, StrengthDown
 
 class Flex(Card):
     def __init__(self, strength: int = 2) -> None:
@@ -12,8 +11,9 @@ class Flex(Card):
         self.strength = strength
 
     def finish(self, energy: int) -> None:
-        self.effect_character(Strength(self.strength))
-        self.effect_character(StrengthDown(self.strength))
+        from ....effect import Strength, StrengthDown
+        self.effect_character(Strength(self.combat, self.strength))
+        self.effect_character(StrengthDown(self.combat, self.strength))
 
 class FlexPlus(Flex):
     def __init__(self) -> None:

@@ -1,22 +1,19 @@
-# TODO
-from copy import deepcopy
-from ...card import Card, CardRarity, CardType, CardTargetType
+from ...card import Card, CardRarity, CardType
+from ....effect.buff.metallicize_buff import MetallicizeBuff
 
 class Metallicize(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, buff: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Power,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.buff = buff
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.effect_character(MetallicizeBuff(self.combat, self.buff))
 
 class MetallicizePlus(Metallicize):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(buff=4)

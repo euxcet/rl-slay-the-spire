@@ -184,3 +184,14 @@ card_collection.add([Berserk, BerserkPlus])
 card_collection.add([Barricade, BarricadePlus])
 card_collection.add([Combust, CombustPlus])
 card_collection.add([FeelNoPain, FeelNoPainPlus])
+
+def upgrade(card: Card) -> Card:
+    if card.__class__.__name__.endswith('Plus'):
+        return card
+    card_plus_class = globals().get(card.__class__.__name__ + 'Plus')
+    if card_plus_class != None:
+        upgraded: Card = card_plus_class()
+        upgraded.cost = card.cost
+        return upgraded
+    else:
+        return card

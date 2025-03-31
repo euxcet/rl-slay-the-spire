@@ -1,22 +1,19 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Impervious(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, block: int = 30) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=2,
+            target_types=[],
+            is_exhaust=True
         )
-        self.damage = damage
+        self.block = block
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.add_block(self.block)
 
 class ImperviousPlus(Impervious):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(block=40)

@@ -1,4 +1,4 @@
-from ...card import Card, CardRarity, CardType, CardTargetType, upgrade
+from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Armaments(Card):
     def __init__(self) -> None:
@@ -10,12 +10,14 @@ class Armaments(Card):
         )
 
     def finish(self, energy: int) -> None:
+        from ... import upgrade
         if len(self.target_types) == 0:
-            upgraded_cards = [upgrade(card) for card in self.hand_pile]
+            upgraded_cards = [upgrade(card).to(self.combat) for card in self.hand_pile]
             self.hand_pile.clear()
             self.hand_pile.extend(upgraded_cards)
         else:
-            self.hand_pile.cards[self.targets[0]] = upgrade(self.hand_pile.cards[self.targets[0]])
+            if self.targets[0] != None:
+                self.hand_pile.cards[self.targets[0]] = upgrade(self.choose_hand_card(self.targets[0])).to(self.combat)
 
 class ArmamentsPlus(Armaments):
     def __init__(self) -> None:

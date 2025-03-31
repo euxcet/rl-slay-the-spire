@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import random
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import TYPE_CHECKING
@@ -9,6 +10,7 @@ if TYPE_CHECKING:
     from ..combat import Combat
     from ..effect import Effect
     from ..enemy import Enemy
+    from ..character import Character
     from .pile import Pile
 
 class CardRarity(Enum):
@@ -86,10 +88,21 @@ class Card(ABC):
     def exhaust_pile(self) -> 'Pile':
         return self.combat.character.exhaust_pile
 
+    @property
+    def character(self) -> 'Character':
+        return self.combat.character
+
+    @property
+    def enemies(self) -> list['Enemy']:
+        return self.combat.enemies
+
     def target_type(self) -> CardTargetType:
         if len(self.target_types) == 0:
             return None
-        return self.target_types[self.step]
+        if isinstance((t := self.target_types[self.step]), tuple):
+            return t[0]
+        else:
+            return t
 
     def next_step(self) -> bool:
         while self.step < len(self.target_types):
@@ -100,6 +113,8 @@ class Card(ABC):
                 break
         if self.step == len(self.target_types):
             self._finish(self.energy)
+            for effect in self.character.effects:
+                effect.on_play_card(self)
             return True
         return False
 
@@ -108,7 +123,21 @@ class Card(ABC):
         self.energy = energy
         self.step = 0
         self.targets = []
+        self.on_play()
         return self.next_step()
+
+    def random_play(self, energy: int):
+        self.energy = energy
+        self.step = 0
+        self.targets = []
+        while self.step < len(self.target_types):
+            action_mask = self.get_action_mask(self.combat.MAX_ACTION)
+            if np.sum(action_mask) == 0:
+                self.targets.append(None)
+            else:
+                self.targets.append(random.choice([i for i in range(len(action_mask)) if action_mask[i] > 0]))
+            self.step += 1
+        self._finish(self.energy)
 
     # return: has the card completed its function
     def choose(self, target: int) -> bool:
@@ -117,29 +146,57 @@ class Card(ABC):
         return self.next_step()
 
     def can_choose(self, target: int) -> bool:
-        if self.target_types[self.step] == CardTargetType.Enemy:
-            return target < len(self.combat.enemies)
-        elif self.target_types[self.step] == CardTargetType.Hand:
-            return target < len(self.hand_pile)
-        elif self.target_types[self.step] == CardTargetType.Draw:
-            return target < len(self.draw_pile)
-        elif self.target_types[self.step] == CardTargetType.Discard:
-            return target < len(self.discard_pile)
-        elif self.target_types[self.step] == CardTargetType.Exhaust:
-            return target < len(self.exhaust_pile)
+        if isinstance(self.target_types[self.step], tuple):
+            target_type = self.target_types[self.step][0]
+            constraint = self.target_types[self.step][1]
+        else:
+            target_type = self.target_types[self.step]
+            constraint = None
+        if target_type == CardTargetType.Enemy:
+            return target < len(self.enemies) and (constraint == None or constraint(self.enemies[target]))
+        elif target_type == CardTargetType.Hand:
+            return target < len(self.hand_pile) and (constraint == None or constraint(self.hand_pile[target]))
+        elif target_type == CardTargetType.Draw:
+            return target < len(self.draw_pile) and (constraint == None or constraint(self.draw_pile[target]))
+        elif target_type == CardTargetType.Discard:
+            return target < len(self.discard_pile) and (constraint == None or constraint(self.discard_pile[target]))
+        elif target_type == CardTargetType.Exhaust:
+            return target < len(self.exhaust_pile) and (constraint == None or constraint(self.exhaust_pile[target]))
 
     def get_action_mask(self, max_action: int) -> np.ndarray:
-        if self.target_types[self.step] == CardTargetType.Enemy:
-            l = len(self.combat.enemies)
-        elif self.target_types[self.step] == CardTargetType.Hand:
+        if isinstance(self.target_types[self.step], tuple):
+            target_type = self.target_types[self.step][0]
+            constraint = self.target_types[self.step][1]
+        else:
+            target_type = self.target_types[self.step]
+            constraint = None
+
+        if target_type == CardTargetType.Enemy:
+            l = len(self.enemies)
+        elif target_type == CardTargetType.Hand:
             l = len(self.hand_pile)
-        elif self.target_types[self.step] == CardTargetType.Draw:
+        elif target_type == CardTargetType.Draw:
             l = len(self.draw_pile)
-        elif self.target_types[self.step] == CardTargetType.Discard:
+        elif target_type == CardTargetType.Discard:
             l = len(self.discard_pile)
-        elif self.target_types[self.step] == CardTargetType.Exhaust:
+        elif target_type == CardTargetType.Exhaust:
             l = len(self.exhaust_pile)
-        return np.pad(np.ones((min(max_action, l),), dtype=np.float32), [(0, max(0, max_action - l))])
+
+        mask = np.pad(np.ones((min(max_action, l),), dtype=np.float32), [(0, max(0, max_action - l))])
+        if constraint != None:
+            for i in range(len(mask)):
+                if mask[i] > 0:
+                    if target_type == CardTargetType.Enemy:
+                        mask[i] = constraint(self.enemies[i])
+                    elif target_type == CardTargetType.Hand:
+                        mask[i] = constraint(self.hand_pile[i])
+                    elif target_type == CardTargetType.Draw:
+                        mask[i] = constraint(self.draw_pile[i])
+                    elif target_type == CardTargetType.Discard:
+                        mask[i] = constraint(self.discard_pile[i])
+                    elif target_type == CardTargetType.Exhaust:
+                        mask[i] = constraint(self.exhaust_pile[i])
+        return mask
 
     def to(self, combat: Combat) -> Card:
         self.combat = combat
@@ -168,12 +225,12 @@ class Card(ABC):
             self.exhaust()
         else:
             self.discard()
-        #     self.combat.character.exhaust_pile.insert(self)
-        # else:
-        #     self.combat.character.discard_pile.insert(self)
 
     @abstractmethod
     def finish(self, energy: int) -> None:
+        ...
+
+    def on_play(self) -> None:
         ...
 
     def on_draw(self) -> None:
@@ -184,33 +241,31 @@ class Card(ABC):
 
     def on_discard(self) -> None:
         ...
-        # if self.is_ethereal:
-        #     self.exhaust()
-        # else:
-        #     self.move_to(self.discard_pile)
 
     def on_exhaust(self) -> None:
-        ...
+        for effect in self.combat.character.effects:
+            effect.on_exhaust(self)
 
     def get_enemy(self, target: int) -> Enemy:
-        return self.combat.enemies[target]
+        return self.enemies[target]
 
     def add_block(self, block: int) -> None:
-        self.combat.character.add_block(block)
+        self.character.add_block(block)
 
     def attack(self, enemy: Enemy, damage: int) -> int:
-        self.combat.character.attack(enemy, damage)
+        self.character.attack(enemy, damage)
 
     def effect_character(self, effect: 'Effect') -> None:
-        self.combat.character.receive_effect(effect)
+        self.character.receive_effect(effect)
 
     def effect_enemy(self, enemy: Enemy, effect: 'Effect') -> None:
         enemy.receive_effect(effect)
 
-def upgrade(card: Card) -> Card:
-    if card.__class__.__name__.endswith('Plus'):
-        return card
-    card_plus_class = globals().get(card.__class__.__name__ + 'Plus')
-    upgraded: Card = card_plus_class()
-    upgraded.cost = card.cost
-    return upgraded
+    def choose_hand_card(self, index: int = None) -> Card:
+        if index == None:
+            if len(self.hand_pile) == 0:
+                return None
+            else:
+                return random.choice(self.hand_pile)
+        else:
+            return self.hand_pile[index]

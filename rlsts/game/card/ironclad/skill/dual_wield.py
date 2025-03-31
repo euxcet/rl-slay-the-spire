@@ -1,22 +1,21 @@
-# TODO
 from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class DualWield(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, num: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[(CardTargetType.Hand, lambda x: x.type in [CardType.Attack, CardType.Power])],
         )
-        self.damage = damage
+        self.num = num
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        if (card := self.choose_hand_card(self.targets[0])) != None:
+            for n in range(self.num):
+                self.character.draw_to_hand(deepcopy(card))
 
 class DualWieldPlus(DualWield):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(num=2)

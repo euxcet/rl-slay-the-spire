@@ -10,6 +10,8 @@ class Collection():
             for x in t:
                 self.add(x)
             return
+        if t in self.types:
+            return
         t.ID = self.num
         self.types[t] = self.num
         self.num += 1

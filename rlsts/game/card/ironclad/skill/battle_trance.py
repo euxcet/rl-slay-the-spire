@@ -1,22 +1,20 @@
-# TODO
-from copy import deepcopy
-from ...card import Card, CardRarity, CardType, CardTargetType
+from ....effect.debuff.no_draw import NoDraw
+from ...card import Card, CardRarity, CardType
 
 class BattleTrance(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, draw: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Uncommon,
             type=CardType.Skill,
             cost=0,
-            target_types=[CardTargetType.Enemy],
+            target_types=[],
         )
-        self.damage = damage
+        self.draw = draw
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.character.draw(self.draw)
+        self.effect_character(NoDraw(self.combat, 1))
 
 class BattleTrancePlus(BattleTrance):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(draw=4)

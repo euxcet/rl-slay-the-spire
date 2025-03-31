@@ -1,22 +1,19 @@
-# TODO
-from copy import deepcopy
-from ...card import Card, CardRarity, CardType, CardTargetType
+from ...card import Card, CardRarity, CardType
+from ....effect.buff.ritual import Ritual
 
 class DemonForm(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, buff: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
+            rarity=CardRarity.Rare,
             type=CardType.Power,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=3,
+            target_types=[],
         )
-        self.damage = damage
+        self.buff = buff
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.effect_character(Ritual(self.combat, self.buff, 0))
 
 class DemonFormPlus(DemonForm):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(buff=3)

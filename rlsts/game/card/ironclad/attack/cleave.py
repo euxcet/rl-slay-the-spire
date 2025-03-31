@@ -11,7 +11,7 @@ class Cleave(Card):
         self.damage = damage
 
     def finish(self, energy: int) -> None:
-        for enemy in self.combat.enemies.copy():
+        for enemy in self.enemies.copy():
             self.attack(enemy, self.damage)
 
 class CleavePlus(Cleave):

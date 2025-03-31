@@ -12,7 +12,7 @@ class Hemokinesis(Card):
 
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
-        self.combat.character.lose_hp(2)
+        self.character.lose_hp(2)
         self.attack(enemy, self.damage)
 
 class HemokinesisPlus(Hemokinesis):

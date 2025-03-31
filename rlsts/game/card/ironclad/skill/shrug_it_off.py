@@ -1,22 +1,20 @@
-# TODO
-from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class ShrugItOff(Card):
-    def __init__(self, damage: int = 6) -> None:
+    def __init__(self, block: int = 6) -> None:
         super().__init__(
             rarity=CardRarity.Common,
             type=CardType.Skill,
-            cost=0,
-            target_types=[CardTargetType.Enemy],
+            cost=1,
+            target_types=[],
         )
-        self.damage = damage
+        self.block = block
+        self.draw = 1
 
     def finish(self, energy: int) -> None:
-        enemy = self.get_enemy(self.targets[0])
-        self.attack(enemy, self.damage)
-        self.combat.character.discard_pile.insert(deepcopy(self))
+        self.character.add_block(self.block)
+        self.character.draw(self.draw)
 
 class ShrugItOffPlus(ShrugItOff):
     def __init__(self) -> None:
-        super().__init__(damage=8)
+        super().__init__(block=11)
