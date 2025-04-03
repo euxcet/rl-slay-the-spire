@@ -19,6 +19,12 @@ class Enemy(Target):
         self.intent_history: list[Intent] = []
         self.intent_pool = RandomPool()
 
+    def start_turn(self) -> None:
+        super().start_turn()
+
+    def end_turn(self) -> None:
+        super().end_turn()
+
     @abstractmethod
     def get_intent(self, turn: int) -> Intent:
         ...

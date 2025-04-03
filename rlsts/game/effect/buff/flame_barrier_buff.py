@@ -16,5 +16,6 @@ class FlameBarrierBuff(Buff):
     def on_turn_start(self) -> None:
         self.stack = 0
 
-    def on_receive_damage(self, damage: int, target: 'Target'):
-        target.receive_damage(self.stack, self.target)
+    def on_receive_damage(self, damage: int, attacker: 'Target'):
+        if attacker != None:
+            attacker.receive_damage(self.stack, self.target)

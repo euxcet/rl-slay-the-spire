@@ -14,7 +14,7 @@ from .status.void import Void
 from .status.wound import Wound
 from .status.slimed import Slimed
 from .status.dazed import Dazed
-from .status.burn import Burn
+from .status.burn import Burn, BurnPlus
 
 # ./ironclad/attack
 from .ironclad.attack.wild_strike import WildStrike, WildStrikePlus
@@ -104,7 +104,7 @@ card_collection.add(Void)
 card_collection.add(Wound)
 card_collection.add(Slimed)
 card_collection.add(Dazed)
-card_collection.add(Burn)
+card_collection.add([Burn, BurnPlus])
 
 # ./ironclad/attack
 card_collection.add([WildStrike, WildStrikePlus])

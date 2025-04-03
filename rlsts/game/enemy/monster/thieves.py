@@ -1,7 +1,7 @@
 import random
 from ..enemy import Enemy
 from ...effect import Thievery
-from ..intent import Intent, AttackIntent, LooterSmokeBombIntent, LooterEscapeIntent
+from ..intent import Intent, AttackIntent, LooterEscapeIntent, BlockIntent
 
 class Looter(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -17,15 +17,15 @@ class Looter(Enemy):
 
     def get_intent(self) -> Intent:
         if self.combat.turn < 2:
-            return AttackIntent(self, [self.mug, 1])
-        if type(self.intent_history[-1]) is LooterSmokeBombIntent:
+            return AttackIntent(self, [self.mug], is_multi=False)
+        if type(self.intent_history[-1]) is BlockIntent:
             return LooterEscapeIntent(self, [])
         if self.combat.turn == 2:
             if self.intent_pool.peek(self.combat.turn) < 0.5:
-                return AttackIntent(self, [self.lunge, 1])
+                return AttackIntent(self, [self.lunge], is_multi=False)
             else:
-                return LooterSmokeBombIntent(self, [])
-        return LooterSmokeBombIntent(self, [])
+                return BlockIntent(self, [])
+        return BlockIntent(self, [])
 
 class Mugger(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -41,12 +41,12 @@ class Mugger(Enemy):
 
     def get_intent(self) -> Intent:
         if self.combat.turn < 2:
-            return AttackIntent(self, [self.mug, 1])
-        if type(self.intent_history[-1]) is LooterSmokeBombIntent:
+            return AttackIntent(self, [self.mug], is_multi=False)
+        if type(self.intent_history[-1]) is BlockIntent:
             return LooterEscapeIntent(self, [])
         if self.combat.turn == 2:
             if self.intent_pool.peek(self.combat.turn) < 0.5:
-                return AttackIntent(self, [self.lunge, 1])
+                return AttackIntent(self, [self.lunge], is_multi=False)
             else:
-                return LooterSmokeBombIntent(self, [])
-        return LooterSmokeBombIntent(self, [])
+                return BlockIntent(self, [])
+        return BlockIntent(self, [])

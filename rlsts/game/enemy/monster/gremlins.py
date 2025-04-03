@@ -23,7 +23,7 @@ class MadGremlin(Enemy):
         self.receive_effect(Angry(self.combat, self.angry))
 
     def get_intent(self) -> Intent:
-        return AttackIntent(self, [self.damage, 1])
+        return AttackIntent(self, [self.damage], is_multi=False)
 
 class ShieldGremlin(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -46,7 +46,7 @@ class ShieldGremlin(Enemy):
             return ShieldGremlinProtectIntent(self, [self.target, self.protect])
         if self.target is not None:
             return ShieldGremlinProtectIntent(self, [self, self.protect])
-        return AttackIntent(self, [self.damage, 1])
+        return AttackIntent(self, [self.damage], is_multi=False)
 
 class SneakyGremlin(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -54,7 +54,7 @@ class SneakyGremlin(Enemy):
         self.damage = 9
 
     def get_intent(self) -> Intent:
-        return AttackIntent(self, [self.damage, 1])
+        return AttackIntent(self, [self.damage], is_multi=False)
 
 class GremlinWizard(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -65,5 +65,5 @@ class GremlinWizard(Enemy):
 
     def get_intent(self) -> Intent:
         if self.combat.turn >= self.first_turn and (self.combat.turn - self.first_turn) % self.gap_turn == 0:
-            return AttackIntent(self, [self.damage, 1])
+            return AttackIntent(self, [self.damage], is_multi=False)
         return GremlinWizardChargingIntent(self, [])

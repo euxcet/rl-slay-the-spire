@@ -38,9 +38,12 @@ class Pile():
     def remove(self, card: Card) -> None:
         self.cards.remove(card)
     
-    # TODO: insert at the beginning?
-    def insert(self, card: Card) -> None:
-        self.cards.append(card)
+    # insert at the beginning when position is None
+    def insert(self, card: Card, position: int = None) -> None:
+        if position is None:
+            self.cards.append(card)
+        else:
+            self.cards.insert(position, card)
         card.pile = self
 
     def shuffle_into(self, card: Card) -> None:

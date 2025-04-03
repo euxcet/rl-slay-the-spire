@@ -10,5 +10,5 @@ class JawWormBellowIntent(Intent):
         super().__init__(enemy=enemy, values=values)
         
     def perform(self) -> None:
-        self.enemy.receive_effect(Strength(self.enemy.combat, self.values[0]))
+        self.enemy.receive_effect(Strength(self.combat, self.values[0]))
         self.enemy.add_block(self.values[1])

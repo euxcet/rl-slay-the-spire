@@ -11,7 +11,7 @@ class BlueSlaver(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.damage, 1]), 0.6, 3),
+            (AttackIntent(self, [self.damage], is_multi=False), 0.6, 3),
             (SmashIntent(self, [self.smash_damage, self.smash_weak]), 0.4, 3),
         ])
 
@@ -25,11 +25,11 @@ class RedSlaver(Enemy):
 
     def get_intent(self) -> Intent:
         if self.combat.turn == 0:
-            return AttackIntent(self, [self.damage, 1])
+            return AttackIntent(self, [self.damage], is_multi=False)
         self.entangled = self.entangled or type(self.intent_history[-1]) is RedSlaverEntangleIntent
         if self.entangled:
             return self.choose_intent([
-                (AttackIntent(self, [self.damage, 1]), 0.45, 3),
+                (AttackIntent(self, [self.damage], is_multi=False), 0.45, 3),
                 (ScrapeIntent(self, [self.scrape_damage, self.scrape_vulnerable]), 0.55, 3),
             ])
         else:
@@ -37,6 +37,6 @@ class RedSlaver(Enemy):
                 return RedSlaverEntangleIntent(self, [1])
             else:
                 if self.combat.turn % 3 == 0:
-                    return AttackIntent(self, [self.damage, 1])
+                    return AttackIntent(self, [self.damage], is_multi=False)
                 else:
                     return ScrapeIntent(self, [self.scrape_damage, self.scrape_vulnerable])

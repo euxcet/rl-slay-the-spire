@@ -11,6 +11,6 @@ class FungiBeast(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.damage, 1]), 0.6, 3),
+            (AttackIntent(self, [self.damage], is_multi=False), 0.6, 3),
             (GrowIntent(self, [self.grow]), 0.4, 2)
         ])

@@ -9,7 +9,7 @@ class SpikeSlimeSplitIntent(Intent):
 
     def perform(self) -> None:
         from ..monster.slimes import SpikeSlimeM
-        self.enemy.combat.add_enemy(self.enemy.position, SpikeSlimeM(self.enemy.hp).start_combat(self.enemy.combat))
-        self.enemy.combat.add_enemy(self.enemy.position, SpikeSlimeM(self.enemy.hp).start_combat(self.enemy.combat))
+        self.combat.add_enemy(self.enemy.position, SpikeSlimeM(self.enemy.hp).start_combat(self.combat))
+        self.combat.add_enemy(self.enemy.position, SpikeSlimeM(self.enemy.hp).start_combat(self.combat))
         # TODO: garbage collection
-        self.enemy.combat.remove_enemy(self.enemy)
+        self.combat.remove_enemy(self.enemy)

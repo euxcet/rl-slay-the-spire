@@ -8,9 +8,20 @@ from .monster.gremlins import FatGremlin, MadGremlin, ShieldGremlin, SneakyGreml
 from .monster.slavers import RedSlaver, BlueSlaver
 from .monster.thieves import Looter, Mugger
 from .monster.jaw_worm import JawWorm
+
+from .elite.gremlin_nob import GremlinNob
+from .elite.lagavulin import Lagavulin
+from .elite.sentry import Sentry
+
+from .boss.hexaghost import Hexaghost
+from .boss.slime_boss import SlimeBoss
+from .boss.the_guardian import TheGuardian
+
 from ...utils.collection import Collection
 
 enemy_collection = Collection()
+
+# monsters
 enemy_collection.add(Cultist)
 enemy_collection.add(RedLouse)
 enemy_collection.add(GreenLouse)
@@ -31,3 +42,13 @@ enemy_collection.add(MadGremlin)
 enemy_collection.add(ShieldGremlin)
 enemy_collection.add(SneakyGremlin)
 enemy_collection.add(GremlinWizard)
+
+# elites
+enemy_collection.add(GremlinNob)
+enemy_collection.add(Lagavulin)
+enemy_collection.add(Sentry)
+
+# bosses
+enemy_collection.add(Hexaghost)
+enemy_collection.add(SlimeBoss)
+enemy_collection.add(TheGuardian)

@@ -7,7 +7,7 @@ class Slimed(Card):
             type=CardType.Status,
             cost=1,
             target_types=[],
-            is_ethereal=True,
+            is_exhaust=True,
         )
 
     def finish(self, energy: int) -> None:

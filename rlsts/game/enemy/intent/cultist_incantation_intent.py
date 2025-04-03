@@ -9,4 +9,4 @@ class CultistIncantationIntent(Intent):
         super().__init__(enemy=enemy, values=values)
         
     def perform(self) -> None:
-        self.enemy.receive_effect(Ritual(self.enemy.combat, self.values[0], skip=1))
+        self.enemy.receive_effect(Ritual(self.combat, self.values[0], skip=1))

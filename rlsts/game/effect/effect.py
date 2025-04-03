@@ -39,6 +39,9 @@ class Effect():
     def modify_received_damage(self, damage: int) -> int:
         return damage
 
+    def modify_received_effect(self, effect: Effect) -> Effect:
+        return effect
+
     def modify_block(self, block: int) -> int:
         return block
 

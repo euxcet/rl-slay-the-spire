@@ -8,4 +8,4 @@ class LooterSmokeBombIntent(Intent):
         super().__init__(enemy=enemy, values=values)
         
     def perform(self) -> None:
-        ...
+        self.enemy.add_block(self.values[0])

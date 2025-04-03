@@ -1,5 +1,4 @@
 from .intent import Intent
-from ...effect import Strength
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .. import Enemy

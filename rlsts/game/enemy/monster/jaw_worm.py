@@ -13,9 +13,9 @@ class JawWorm(Enemy):
 
     def get_intent(self) -> Intent:
         if self.combat.turn == 0:
-            return AttackIntent(self, [self.damage, 1])
+            return AttackIntent(self, [self.damage], is_multi=False)
         return self.choose_intent([
-            (AttackIntent(self, [self.damage, 1]), 0.25, 2),
+            (AttackIntent(self, [self.damage], is_multi=False), 0.25, 2),
             (ThrashIntent(self, [self.thrash_damage, self.thrash_block]), 0.3, 3),
             (JawWormBellowIntent(self, [self.bellow_strength, self.bellow_block]), 0.45, 2),
         ])

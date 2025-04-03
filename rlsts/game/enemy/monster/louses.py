@@ -15,7 +15,7 @@ class GreenLouse(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.bite_damage, 1]), 0.75, 3),
+            (AttackIntent(self, [self.bite_damage], is_multi=False), 0.75, 3),
             (LouseSpitWebIntent(self, [self.spit_web]), 0.25, 3),
         ])
 
@@ -31,6 +31,6 @@ class RedLouse(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.bite_damage, 1]), 0.75, 3),
+            (AttackIntent(self, [self.bite_damage], is_multi=False), 0.75, 3),
             (GrowIntent(self, [self.grow]), 0.25, 3),
         ])

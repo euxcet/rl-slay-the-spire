@@ -1,5 +1,11 @@
 from .intent import Intent
 from .attack_intent import AttackIntent
+from .block_intent import BlockIntent
+from .scrape_intent import ScrapeIntent
+from .smash_intent import SmashIntent
+from .thrash_intent import ThrashIntent
+from .skip_intent import SkipIntent
+
 from .cultist_incantation_intent import CultistIncantationIntent
 from .grow_intent import GrowIntent
 from .louse_spit_web_intent import LouseSpitWebIntent
@@ -10,22 +16,34 @@ from .spike_slime_flame_tackle_intent import SpikeSlimeFlameTackleIntent
 from .spike_slime_lick_intent import SpikeSlimeLickIntent
 from .spike_slime_split_intent import SpikeSlimeSplitIntent
 from .jaw_worm_bellow_intent import JawWormBellowIntent
-from .thrash_intent import ThrashIntent
-from .smash_intent import SmashIntent
 from .gremlin_wizard_charging_intent import GremlinWizardChargingIntent
 from .shield_gremlin_protect_intent import ShieldGremlinProtectIntent
-from .looter_smoke_bomb_intent import LooterSmokeBombIntent
+# from .looter_smoke_bomb_intent import LooterSmokeBombIntent
 from .looter_escape_intent import LooterEscapeIntent
-from .scrape_intent import ScrapeIntent
 from .red_slaver_entangle_intent import RedSlaverEntangleIntent
+from .gremlin_nob_bellow_intent import GremlinNobBellowIntent
+from .lagavulin_siphon_soul_intent import LagavulinSiphonSoulIntent
+# from .lagavulin_sleep_intent import LagavulinSleepIntent
+from .sentry_bolt_intent import SentryBoltIntent
+from .slime_boss_split_intent import SlimeBossSplitIntent
+from .slime_boss_goop_spray_intent import SlimeBossGoopSprayIntent
+from .the_guardian_vent_steam_intent import TheGuardianVentSteamIntent
+from .the_guardian_defensive_mode_intent import TheGuardianDefensiveModeIntent
+from .the_guardian_twin_slam_intent import TheGuardianTwinSlamIntent
+from .hexaghost_divider_intent import HexaghostDividerIntent
+from .hexaghost_inferno_intent import HexaghostInfernoIntent
+from .hexaghost_inflame_intent import HexaghostInflameIntent
+from .hexaghost_sear_intent import HexaghostSearIntent
 
 from ....utils.collection import Collection
 
 intent_collection = Collection()
 intent_collection.add(AttackIntent)
-intent_collection.add(SmashIntent)
+intent_collection.add(BlockIntent)
 intent_collection.add(ScrapeIntent)
+intent_collection.add(SmashIntent)
 intent_collection.add(ThrashIntent)
+intent_collection.add(SkipIntent)
 
 intent_collection.add(CultistIncantationIntent)
 
@@ -44,7 +62,26 @@ intent_collection.add(JawWormBellowIntent)
 intent_collection.add(GremlinWizardChargingIntent)
 intent_collection.add(ShieldGremlinProtectIntent)
 
-intent_collection.add(LooterSmokeBombIntent)
+# intent_collection.add(LooterSmokeBombIntent)
 intent_collection.add(LooterEscapeIntent)
 
 intent_collection.add(RedSlaverEntangleIntent)
+
+intent_collection.add(GremlinNobBellowIntent)
+
+# intent_collection.add(LagavulinSleepIntent)
+intent_collection.add(LagavulinSiphonSoulIntent)
+
+intent_collection.add(SentryBoltIntent)
+
+intent_collection.add(SlimeBossSplitIntent)
+intent_collection.add(SlimeBossGoopSprayIntent)
+
+intent_collection.add(TheGuardianVentSteamIntent)
+intent_collection.add(TheGuardianDefensiveModeIntent)
+intent_collection.add(TheGuardianTwinSlamIntent)
+
+intent_collection.add(HexaghostSearIntent)
+intent_collection.add(HexaghostDividerIntent)
+intent_collection.add(HexaghostInfernoIntent)
+intent_collection.add(HexaghostInflameIntent)

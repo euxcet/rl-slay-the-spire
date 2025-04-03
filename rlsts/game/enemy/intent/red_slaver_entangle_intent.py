@@ -9,4 +9,4 @@ class RedSlaverEntangleIntent(Intent):
         super().__init__(enemy=enemy, values=values)
 
     def perform(self) -> None:
-        self.enemy.combat.character.receive_effect(Entangled(self.enemy.combat, self.values[0]))
+        self.character.receive_effect(Entangled(self.combat, self.values[0]))

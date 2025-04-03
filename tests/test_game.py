@@ -5,7 +5,8 @@ class TestGame():
     def test_game(self):
         console = Console()
         game = SlayTheSpire()
-        combat = game.get_act1_easy_combat()
+        # combat = game.get_act1_easy_combat()
+        combat = game.get_act1_boss_combat()
         obs = combat.reset()
         console.log(obs.rich())
         while True:

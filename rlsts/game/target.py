@@ -73,11 +73,17 @@ class Target(ABC):
         self.hp -= damage
         for effect in self.effects:
             effect.on_receive_damage(damage, attacker)
+        self.on_receive_damage(damage, attacker)
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
-        if self.died or new_effect.stack == 0:
+        if self.died or new_effect == None or new_effect.stack == 0:
             return
+        for effect in self.effects:
+            new_effect = effect.modify_received_effect(new_effect)
+        if new_effect == None or new_effect.stack == 0:
+            return
+        
         new_effect.target = self
         for effect in self.effects:
             if type(effect) == type(new_effect):
@@ -122,3 +128,6 @@ class Target(ABC):
             else:
                 for effect in self.effects:
                     effect.on_lose_hp(hp)
+
+    def on_receive_damage(self, damage: int, attacker: Target) -> None:
+        ...

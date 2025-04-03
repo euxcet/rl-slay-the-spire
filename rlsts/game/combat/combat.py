@@ -34,12 +34,19 @@ class Combat():
         self.enemies = [enemy for enemy in self.enemies if enemy.hp > 0]
         self.update_enemies()
 
+    @staticmethod
+    def create_enemy(t: type | tuple) -> Enemy:
+        if isinstance(t, type):
+            return t()
+        else:
+            return t[0](**t[1])
+
     def reset(self) -> CombatObservation:
         self.turn = 0
         self.is_over = False
         self.is_game_over = False
         self.character = deepcopy(self.origin_character)
-        self.enemies: list[Enemy] = [enemy() for enemy in self.enemies_type]
+        self.enemies: list[Enemy] = [self.create_enemy(enemy) for enemy in self.enemies_type]
         self.enemies.sort()
         for enemy in self.enemies:
             enemy.start_combat(self)

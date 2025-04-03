@@ -1,6 +1,5 @@
 from .intent import Intent
 from typing import TYPE_CHECKING
-from ...effect import Weak, Frail
 if TYPE_CHECKING:
     from .. import Enemy
 

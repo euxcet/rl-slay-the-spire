@@ -9,4 +9,4 @@ class LouseSpitWebIntent(Intent):
         super().__init__(enemy=enemy, values=values)
         
     def perform(self) -> None:
-        self.enemy.combat.character.receive_effect(Weak(self.enemy.combat, self.values[0]))
+        self.character.receive_effect(Weak(self.combat, self.values[0]))

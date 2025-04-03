@@ -1,7 +1,7 @@
 import random
 from ..enemy import Enemy
 from ..intent import Intent, AcidSlimeSplitIntent, AcidSlimeLickIntent, AcidSlimeCorrosiveSpitIntent, AttackIntent
-from ..intent import SpikeSlimeSplitIntent, SpikeSlimeLickIntent, SpikeSlimeFlameTackleIntent, AttackIntent
+from ..intent import SpikeSlimeSplitIntent, SpikeSlimeLickIntent, SpikeSlimeFlameTackleIntent
 
 class AcidSlimeL(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -16,7 +16,7 @@ class AcidSlimeL(Enemy):
             return AcidSlimeSplitIntent(self, [])
         return self.choose_intent( [
             (AcidSlimeCorrosiveSpitIntent(self, [self.corrosive_spit_damage, self.corrosive_spit_slimed]), 0.3, 3),
-            (AttackIntent(self, [self.attack_damage]), 0.4, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.4, 2),
             (AcidSlimeLickIntent(self, [self.lick]), 0.3, 2),
         ])
 
@@ -31,7 +31,7 @@ class AcidSlimeM(Enemy):
     def get_intent(self) -> Intent:
         return self.choose_intent( [
             (AcidSlimeCorrosiveSpitIntent(self, [self.corrosive_spit_damage, self.corrosive_spit_slimed]), 0.3, 3),
-            (AttackIntent(self, [self.attack_damage]), 0.4, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.4, 2),
             (AcidSlimeLickIntent(self, [self.lick]), 0.3, 2),
         ])
 
@@ -43,7 +43,7 @@ class AcidSlimeS(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.attack_damage]), 0.5, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.5, 2),
             (AcidSlimeLickIntent(self, [self.lick]), 0.5, 2),
         ])
 
@@ -60,7 +60,7 @@ class SpikeSlimeL(Enemy):
             return SpikeSlimeSplitIntent(self, [])
         return self.choose_intent( [
             (SpikeSlimeFlameTackleIntent(self, [self.corrosive_spit_damage, self.corrosive_spit_slimed]), 0.3, 3),
-            (AttackIntent(self, [self.attack_damage]), 0.4, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.4, 2),
             (SpikeSlimeLickIntent(self, [self.lick]), 0.3, 2),
         ])
 
@@ -75,7 +75,7 @@ class SpikeSlimeM(Enemy):
     def get_intent(self) -> Intent:
         return self.choose_intent( [
             (SpikeSlimeFlameTackleIntent(self, [self.corrosive_spit_damage, self.corrosive_spit_slimed]), 0.3, 3),
-            (AttackIntent(self, [self.attack_damage]), 0.4, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.4, 2),
             (SpikeSlimeLickIntent(self, [self.lick]), 0.3, 2),
         ])
 
@@ -87,6 +87,6 @@ class SpikeSlimeS(Enemy):
 
     def get_intent(self) -> Intent:
         return self.choose_intent([
-            (AttackIntent(self, [self.attack_damage]), 0.5, 2),
+            (AttackIntent(self, [self.attack_damage], is_multi=False), 0.5, 2),
             (SpikeSlimeLickIntent(self, [self.lick]), 0.5, 2),
         ])

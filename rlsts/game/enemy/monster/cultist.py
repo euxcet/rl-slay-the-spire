@@ -12,4 +12,4 @@ class Cultist(Enemy):
     def get_intent(self) -> Intent:
         if self.combat.turn == 0:
             return CultistIncantationIntent(self, [self.incantation])
-        return AttackIntent(self, [self.damage])
+        return AttackIntent(self, [self.damage], is_multi=False)

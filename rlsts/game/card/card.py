@@ -115,6 +115,9 @@ class Card(ABC):
             self._finish(self.energy)
             for effect in self.character.effects:
                 effect.on_play_card(self)
+            for enemy in self.enemies:
+                for effect in enemy.effects:
+                    effect.on_play_card(self)
             return True
         return False
 
@@ -203,11 +206,14 @@ class Card(ABC):
         return self
 
     # Put the card on top of the pile
-    def move_to(self, pile: 'Pile') -> Card:
+    def move_to(self, pile: 'Pile', is_random: bool = False) -> Card:
         if self.pile != None and self in self.pile:
             self.pile.remove(self)
         if pile != None:
-            pile.insert(self)
+            if is_random:
+                pile.insert(self, random.randint(0, len(pile)))
+            else:
+                pile.insert(self)
         return self
 
     def exhaust(self) -> None:
