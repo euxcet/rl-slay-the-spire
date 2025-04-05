@@ -57,7 +57,10 @@ class Character(Target):
         super().end_turn()
         self.energy = 0
         for card in self.hand_pile.cards.copy():
-            card.discard(is_turn_end=True)
+            if card.is_ethereal:
+                card.exhaust()
+            else:
+                card.discard(is_turn_end=True)
 
     def die(self) -> None:
         super().die()
@@ -65,6 +68,8 @@ class Character(Target):
         self.combat.is_game_over = True
 
     def draw(self, num: int) -> None:
+        for effect in self.effects:
+            num = effect.modify_draw(num)
         for _ in range(num):
             if len(self.draw_pile) == 0:
                 for card in self.discard_pile.cards.copy():
@@ -103,7 +108,8 @@ class Character(Target):
 
     def can_play_card(self, card_id: int) -> bool:
         return card_id >= 0 and card_id < len(self.hand_pile) and \
-                self.hand_pile.cards[card_id].cost is None or self.energy >= self.hand_pile.cards[card_id].cost
+                not self.hand_pile.cards[card_id].is_unplayable and \
+                (self.hand_pile.cards[card_id].cost is None or self.energy >= self.hand_pile.cards[card_id].cost)
 
     def play_card(self, card_index: int) -> None:
         if not self.can_play_card(card_index):

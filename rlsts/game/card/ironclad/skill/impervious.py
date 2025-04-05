@@ -7,7 +7,7 @@ class Impervious(Card):
             type=CardType.Skill,
             cost=2,
             target_types=[],
-            is_exhaust=True
+            is_exhaust=True,
         )
         self.block = block
 

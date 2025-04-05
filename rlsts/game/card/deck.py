@@ -113,6 +113,9 @@ class Deck():
 
     @staticmethod
     def ironclad_random_deck() -> Deck:
+        # return Deck([Shockwave(), SpotWeakness(), TrueGrit(), ArmamentsPlus(), BodySlam(), Cleave(), \
+        #              Clothesline(), Headbutt(), PommelStrike(), Thunderclap(), TwinStrike(), WildStrike(),\
+        #              Bludgeon(), FiendFire(), Immolate()])
         card_types = {
             "strike": ([Strike], random.randint(3, 5), 10, 0),
             
@@ -158,45 +161,4 @@ class Deck():
                         else:
                             cards.append(card_type())
                         break
-
-
-        # num_strike = random.randint(3, 5)
-        # num_defend = random.randint(3, 4)
-        # num_bash = random.randint(1, 1)
-        # num_attack = random.randint(0, 5)
-        # num_attack_duplicate = 2
-        # num_skill = random.randint(0, 5)
-        # num_skill_duplicate = 2
-        # num_power = random.randint(0, 1)
-        # num_power_duplicate = 2
-
-        # cards = []
-        # for i in range(num_strike):
-        #     cards.append(Strike())
-        # for i in range(num_defend):
-        #     cards.append(Defend())
-        # for i in range(num_bash):
-        #     cards.append(Bash())
-
-        # for i in range(num_attack):
-        #     while True:
-        #         card_type = random.choice(attack_card_types)
-        #         if sum(map(lambda x: isinstance(x, card_type), cards)) < num_attack_duplicate:
-        #             cards.append(card_type())
-        #             break
-
-        # for i in range(num_skill):
-        #     while True:
-        #         card_type = random.choice(skill_card_types)
-        #         if sum(map(lambda x: isinstance(x, card_type), cards)) <= num_skill_duplicate:
-        #             cards.append(card_type())
-        #             break
-
-        # for i in range(num_power):
-        #     while True:
-        #         card_type = random.choice(power_card_types)
-        #         if sum(map(lambda x: isinstance(x, card_type), cards)) <= num_power_duplicate:
-        #             cards.append(card_type())
-        #             break
-
         return Deck(cards)

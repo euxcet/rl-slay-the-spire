@@ -15,6 +15,6 @@ class FireBreathingBuff(Buff):
 
     def on_draw(self, card: 'Card') -> 'Card':
         from ...card.card import CardType
-        if card.type == CardType.Status:
+        if card.type == CardType.Status or card.type == CardType.Curse:
             for enemy in self.combat.enemies.copy():
                 enemy.receive_damage(self.stack, self.target, do_effect=False)

@@ -8,6 +8,7 @@ class Armaments(Card):
             cost=1,
             target_types=[CardTargetType.Hand],
         )
+        self.block = 5
 
     def finish(self, energy: int) -> None:
         from ... import upgrade
@@ -18,6 +19,7 @@ class Armaments(Card):
         else:
             if self.targets[0] != None:
                 self.hand_pile.cards[self.targets[0]] = upgrade(self.choose_hand_card(self.targets[0])).to(self.combat)
+        self.add_block(self.block)
 
 class ArmamentsPlus(Armaments):
     def __init__(self) -> None:

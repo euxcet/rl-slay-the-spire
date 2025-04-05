@@ -7,7 +7,7 @@ class Immolate(Card):
             rarity=CardRarity.Rare,
             type=CardType.Attack,
             cost=2,
-            target_types=[CardTargetType.Enemy],
+            target_types=[],
         )
         self.damage = damage
 

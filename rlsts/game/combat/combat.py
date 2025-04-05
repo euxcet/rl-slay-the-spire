@@ -57,13 +57,13 @@ class Combat():
 
     def get_action_mask(self) -> np.ndarray:
         if self.character.is_card_playing():
-            return self.character.playing_card.get_action_mask(self.MAX_ACTION)
+            return self.character.playing_card.get_action_mask()
         else:
             mask = np.zeros((self.MAX_ACTION,), dtype=np.float32)
             # end turn
             mask[0] = 1
             for i, card in enumerate(self.character.hand_pile.cards):
-                if not card.is_unplayable and (card.cost is None or card.cost <= self.character.energy):
+                if self.character.can_play_card(i):
                     try:
                         mask[i + 1] = all(effect.can_play_card(card) for effect in self.character.effects)
                     except:

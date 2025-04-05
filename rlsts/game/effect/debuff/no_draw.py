@@ -15,3 +15,7 @@ class NoDraw(Debuff):
 
     def modify_turn_draw(self, num: int) -> int:
         return 0
+
+    def modify_draw(self, num: int) -> int:
+        return 0
+    

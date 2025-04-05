@@ -7,5 +7,4 @@ from .act1_elite_combat import Act1EliteCombat
 from .act1_boss_combat import Act1BossCombat
 
 def random_combat(character) -> Combat:
-    return Act1BossCombat(character)
     return random.choice([Act1EasyCombat, Act1HardCombat, Act1EliteCombat, Act1BossCombat])(character)

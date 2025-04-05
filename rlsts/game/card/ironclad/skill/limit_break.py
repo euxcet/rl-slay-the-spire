@@ -17,4 +17,4 @@ class LimitBreak(Card):
 
 class LimitBreakPlus(LimitBreak):
     def __init__(self) -> None:
-        super().__init__(is_exhaust=True)
+        super().__init__(is_exhaust=False)

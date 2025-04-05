@@ -24,6 +24,9 @@ class Effect():
     def set_stack(self, stack: int) -> None:
         self.stack = min(max(stack, self.min_stack), self.max_stack)
 
+    def modify_draw(self, num: int) -> int:
+        return num
+
     def modify_turn_draw(self, num: int) -> int:
         return num
 
@@ -86,4 +89,4 @@ class Effect():
 
     def merge(self, effect: Effect) -> None:
         # TODO: check
-        self.stack += effect.stack
+        self.stack = max(min(self.max_stack, self.stack + effect.stack), self.min_stack)

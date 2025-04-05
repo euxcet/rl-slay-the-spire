@@ -14,8 +14,10 @@ class Artifact(Buff):
         super().__init__(combat=combat, stack=stack, decrease_per_turn=0)
 
     def modify_received_effect(self, effect: 'Effect') -> 'Effect':
+        from ..buff.buff import Buff
         from ..debuff.debuff import Debuff
-        if effect != None and isinstance(effect, Debuff) and self.stack > 0:
+        if self.stack > 0 and effect != None and \
+            ((isinstance(effect, Debuff) and effect.stack > 0) or (isinstance(effect, Buff) and effect.stack < 0)):
             self.stack -= 1
             return None
         return effect

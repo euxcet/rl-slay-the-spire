@@ -10,12 +10,12 @@ class Offering(Card):
             is_exhaust=True,
         )
         self.lose = 6
-        self.energy = 2
+        self.add_energy = 2
         self.draw = draw
 
     def finish(self, energy: int) -> None:
         self.character.lose_hp(self.lose)
-        self.character.energy += self.energy
+        self.character.energy += self.add_energy
         self.character.draw(self.draw)
 
 class OfferingPlus(Offering):

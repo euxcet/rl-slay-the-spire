@@ -10,7 +10,7 @@ class CombatModule(TorchRLModule, ValueFunctionAPI):
 
     @override(TorchRLModule)
     def setup(self) -> None:
-        input_dim = 2476
+        input_dim = 2732
         output_dim = self.action_space.n
         self._policy_net = torch.nn.Sequential(
             Linear(input_dim, 128),

@@ -93,7 +93,7 @@ class CombatObservation():
                     enumerate(zip(self.enemies_type, self.enemies_hp, self.enemies_block, self.enemies_effects, self.enemies_intent))
             ]
         )
-        cards_str = ' '.join([f'[bold green]{type(card).__name__}[{id + 1}][/bold green]' for id, card in enumerate(self.hand_pile.cards)]) + '\n'
+        cards_str = self.hand_pile.rich(offset=1) + '\n'
         playing_card = 'None' if self.playing_card is None else f'[bold yellow]{type(self.playing_card).__name__}[/bold yellow] {self.playing_step}'
         return f'\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n' + \
                f'[bold blue]{self.character_type.__name__}[/bold blue]\n' + \

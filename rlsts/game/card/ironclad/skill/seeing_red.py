@@ -7,11 +7,12 @@ class SeeingRed(Card):
             type=CardType.Skill,
             cost=cost,
             target_types=[],
+            is_exhaust=True,
         )
-        self.energy = 2
+        self.add_energy = 2
 
     def finish(self, energy: int) -> None:
-        self.character.energy += self.energy
+        self.character.energy += self.add_energy
 
 class SeeingRedPlus(SeeingRed):
     def __init__(self) -> None:

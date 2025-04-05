@@ -106,7 +106,7 @@ class Card(ABC):
 
     def next_step(self) -> bool:
         while self.step < len(self.target_types):
-            if np.sum(self.get_action_mask(self.combat.MAX_ACTION)) == 0:
+            if np.sum(self.get_action_mask()) == 0:
                 self.targets.append(None)
                 self.step += 1
             else:
@@ -134,7 +134,7 @@ class Card(ABC):
         self.step = 0
         self.targets = []
         while self.step < len(self.target_types):
-            action_mask = self.get_action_mask(self.combat.MAX_ACTION)
+            action_mask = self.get_action_mask()
             if np.sum(action_mask) == 0:
                 self.targets.append(None)
             else:
@@ -149,24 +149,9 @@ class Card(ABC):
         return self.next_step()
 
     def can_choose(self, target: int) -> bool:
-        if isinstance(self.target_types[self.step], tuple):
-            target_type = self.target_types[self.step][0]
-            constraint = self.target_types[self.step][1]
-        else:
-            target_type = self.target_types[self.step]
-            constraint = None
-        if target_type == CardTargetType.Enemy:
-            return target < len(self.enemies) and (constraint == None or constraint(self.enemies[target]))
-        elif target_type == CardTargetType.Hand:
-            return target < len(self.hand_pile) and (constraint == None or constraint(self.hand_pile[target]))
-        elif target_type == CardTargetType.Draw:
-            return target < len(self.draw_pile) and (constraint == None or constraint(self.draw_pile[target]))
-        elif target_type == CardTargetType.Discard:
-            return target < len(self.discard_pile) and (constraint == None or constraint(self.discard_pile[target]))
-        elif target_type == CardTargetType.Exhaust:
-            return target < len(self.exhaust_pile) and (constraint == None or constraint(self.exhaust_pile[target]))
+        return target < self.combat.MAX_ACTION and self.get_action_mask()[target] > 0
 
-    def get_action_mask(self, max_action: int) -> np.ndarray:
+    def get_action_mask(self) -> np.ndarray:
         if isinstance(self.target_types[self.step], tuple):
             target_type = self.target_types[self.step][0]
             constraint = self.target_types[self.step][1]
@@ -185,7 +170,7 @@ class Card(ABC):
         elif target_type == CardTargetType.Exhaust:
             l = len(self.exhaust_pile)
 
-        mask = np.pad(np.ones((min(max_action, l),), dtype=np.float32), [(0, max(0, max_action - l))])
+        mask = np.pad(np.ones((min(self.combat.MAX_ACTION, l),), dtype=np.float32), [(0, max(0, self.combat.MAX_ACTION - l))])
         if constraint != None:
             for i in range(len(mask)):
                 if mask[i] > 0:
@@ -203,6 +188,10 @@ class Card(ABC):
 
     def to(self, combat: Combat) -> Card:
         self.combat = combat
+        return self
+    
+    def to_pile(self, pile: 'Pile') -> Card:
+        self.pile = pile
         return self
 
     # Put the card on top of the pile
@@ -229,7 +218,7 @@ class Card(ABC):
         self.finish(energy)
         if self.is_exhaust:
             self.exhaust()
-        else:
+        elif self.type == CardType.Attack or self.type == CardType.Skill:
             self.discard()
 
     @abstractmethod
@@ -275,3 +264,33 @@ class Card(ABC):
                 return random.choice(self.hand_pile)
         else:
             return self.hand_pile[index]
+
+    # for test
+    def get_choice_list(self) -> list[tuple]:
+        if self.step > len(self.target_types):
+            return []
+        def merge(targets: list, mask: np.ndarray) -> list[tuple]:
+            result = []
+            for i in range(min(len(targets), len(mask))):
+                result.append((targets[i], mask[i]))
+            return result
+
+        if isinstance(self.target_types[self.step], tuple):
+            target_type = self.target_types[self.step][0]
+        else:
+            target_type = self.target_types[self.step]
+        mask = self.get_action_mask()
+
+        if target_type == CardTargetType.Enemy:
+            return merge(self.enemies, mask)
+        elif target_type == CardTargetType.Hand:
+            return merge(self.hand_pile.cards, mask)
+        elif target_type == CardTargetType.Draw:
+            return merge(self.draw_pile.cards, mask)
+        elif target_type == CardTargetType.Discard:
+            return merge(self.discard_pile.cards, mask)
+        elif target_type == CardTargetType.Exhaust:
+            return merge(self.exhaust_pile.cards, mask)
+
+    def rich(self, offset: int = 0, style: str = 'bold green') -> str:
+        return f'[{style}]{type(self).__name__}[{offset}][/{style}]'

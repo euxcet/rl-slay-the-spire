@@ -14,7 +14,7 @@ class Anger(Card):
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        deepcopy(self).move_to(self.discard_pile)
+        deepcopy(self).to(self.combat).move_to(self.discard_pile)
 
 class AngerPlus(Anger):
     def __init__(self) -> None:

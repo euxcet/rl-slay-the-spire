@@ -10,6 +10,5 @@ class AcidSlimeCorrosiveSpitIntent(AttackIntent):
 
     def perform(self) -> None:
         super().perform()
-        # self.enemy.attack(self.values[0])
         for _ in range(self.values[1]):
             Slimed().to(self.combat).move_to(self.character.discard_pile, is_random=True)

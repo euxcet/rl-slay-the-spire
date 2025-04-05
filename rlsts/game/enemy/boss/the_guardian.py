@@ -33,16 +33,15 @@ class TheGuardian(Enemy):
     def start_combat(self, combat) -> None:
         super().start_combat(combat)
         self.receive_effect(ModeShift(self.combat, self.mode_shift))
-        self.receive_effect(SharpHide(self.combat, 3))
 
     def get_intent(self) -> Intent:
         if self.mode == TheGuardianMode.OFFENSIVE:
             pattern = (self.combat.turn - self.mode_start_turn) % 4
-            if pattern == 1 or self.combat.turn == 0:
+            if (self.combat.turn > 4 and pattern == 1) or self.combat.turn == 0:
                 return BlockIntent(self, [self.charging_up])
-            elif pattern == 2 or self.combat.turn == 1:
+            elif (self.combat.turn > 4 and pattern == 2) or self.combat.turn == 1:
                 return AttackIntent(self, [self.fierce_bash], is_multi=False)
-            elif pattern == 3 or self.combat.turn == 2:
+            elif (self.combat.turn > 4 and pattern == 3) or self.combat.turn == 2:
                 return TheGuardianVentSteamIntent(self, [self.vent_stream])
             else:
                 return AttackIntent(self, [self.whirlwind_damage, self.whirlwind_repeat], is_multi=True)
@@ -63,5 +62,6 @@ class TheGuardian(Enemy):
         else:
             self.mode = TheGuardianMode.OFFENSIVE
             self.mode_shift += 10
+            self.remove_effect(SharpHide)
             self.receive_effect(ModeShift(self.combat, self.mode_shift))
             self.mode_start_turn = self.combat.turn + 1

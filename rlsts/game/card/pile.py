@@ -62,3 +62,15 @@ class Pile():
 
     def __getitem__(self, index: int) -> Card:
         return self.cards[index]
+
+    def __str__(self) -> str:
+        return ' '.join([
+            f'{type(card).__name__}[{id + 1}]'
+            for id, card in enumerate(self.cards)
+        ])
+
+    def rich(self, offset: int = 0) -> str:
+        return ' '.join([
+            f'[bold green]{type(card).__name__}[{id + offset}][/bold green][bold yellow]({card.cost})[/bold yellow]'
+            for id, card in enumerate(self.cards)
+        ])

@@ -9,6 +9,7 @@ class Shockwave(Card):
             type=CardType.Skill,
             cost=2,
             target_types=[],
+            is_exhaust=True,
         )
         self.debuff = debuff
 

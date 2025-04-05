@@ -31,7 +31,7 @@ class CombatEnv(gym.Env):
         self.observation_space = Dict({
             "character_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),
             # "character_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),
-            # "character_max_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),
+            "character_max_hp": Box(low=0, high=self.MAX_CHARACTER_HP, shape=(1,), dtype=np.float32),
             "character_block": Box(low=0, high=self.MAX_BLOCK, shape=(1,), dtype=np.float32),
             "character_effects": Box(low=0, high=self.MAX_EFFECT_STACK, shape=(len(effect_collection),), dtype=np.float32),
             "hand_pile_id": Box(low=0, high=1, shape=(self.MAX_NUM_HAND_CARDS, len(card_collection)), dtype=np.float32),
@@ -51,11 +51,13 @@ class CombatEnv(gym.Env):
         })
         self.action_space = Discrete(Combat.MAX_ACTION)
 
-    def pad(self, data: np.ndarray, target: list[int]) -> np.ndarray:
+    def fix_shape(self, data: np.ndarray, target: list[int]) -> np.ndarray:
         while len(data.shape) < len(target):
             data = np.expand_dims(data, axis=-1)
         width = [(0, target[i] - data.shape[i]) for i in range(len(data.shape))]
-        return np.pad(data, width, mode='constant', constant_values=0.0)
+        result = np.pad(data, width, mode='constant', constant_values=0.0)
+        slices = tuple(slice(0, min(t, s)) for s, t in zip(result.shape, target))
+        return result[slices]
 
     def to_effect_obs(self, effects: list[Effect]) -> np.ndarray:
         return effect_collection.tensor(
@@ -68,18 +70,18 @@ class CombatEnv(gym.Env):
         return {
             "character_hp": np.array([obs.character_hp], np.float32),
             # "character_hp": np.array([obs.character_hp], np.float32),
-            # "character_max_hp": np.array([obs.character_max_hp], np.float32),
+            "character_max_hp": np.array([obs.character_max_hp], np.float32),
             "character_block": np.array([obs.character_block], np.float32),
             "character_effects": self.to_effect_obs(obs.character_effects),
-            "hand_pile_id": self.pad(np.array([card_collection.tensor([card]) for card in obs.hand_pile.cards], np.float32), (self.MAX_NUM_HAND_CARDS, len(card_collection))),
-            "hand_pile_cost": self.pad(np.array([-1 if card.cost == None else card.cost for card in obs.hand_pile.cards], np.float32), (self.MAX_NUM_HAND_CARDS,)),
-            "enemy_type": self.pad(np.array([enemy_collection.tensor([enemy]) for enemy in obs.enemies_type], np.float32), (self.MAX_NUM_ENEMIES, len(enemy_collection))),
+            "hand_pile_id": self.fix_shape(np.array([card_collection.tensor([card]) for card in obs.hand_pile.cards], np.float32), (self.MAX_NUM_HAND_CARDS, len(card_collection))),
+            "hand_pile_cost": self.fix_shape(np.array([-1 if card.cost == None else card.cost for card in obs.hand_pile.cards], np.float32), (self.MAX_NUM_HAND_CARDS,)),
+            "enemy_type": self.fix_shape(np.array([enemy_collection.tensor([enemy]) for enemy in obs.enemies_type], np.float32), (self.MAX_NUM_ENEMIES, len(enemy_collection))),
             # "enemy_hp": self.pad(np.array([hp / max_hp for hp, max_hp in zip(obs.enemies_hp, obs.enemies_max_hp)], np.float32), (self.MAX_NUM_ENEMIES,)),
-            "enemy_hp": self.pad(np.array(obs.enemies_hp, np.float32), (self.MAX_NUM_ENEMIES,)),
+            "enemy_hp": self.fix_shape(np.array(obs.enemies_hp, np.float32), (self.MAX_NUM_ENEMIES,)),
             # "enemy_max_hp": self.pad(np.array(obs.enemies_max_hp, np.float32), (self.MAX_NUM_ENEMIES,)),
-            "enemy_block": self.pad(np.array(obs.enemies_block, np.float32), (self.MAX_NUM_ENEMIES,)),
-            "enemy_effect": self.pad(np.array([self.to_effect_obs(effects) for effects in obs.enemies_effects], np.float32), (self.MAX_NUM_ENEMIES, len(effect_collection))),
-            "enemy_intent": self.pad(np.array([intent_collection.tensor([intent]) for intent in obs.enemies_intent], np.float32), (self.MAX_NUM_ENEMIES, len(intent_collection))),
+            "enemy_block": self.fix_shape(np.array(obs.enemies_block, np.float32), (self.MAX_NUM_ENEMIES,)),
+            "enemy_effect": self.fix_shape(np.array([self.to_effect_obs(effects) for effects in obs.enemies_effects], np.float32), (self.MAX_NUM_ENEMIES, len(effect_collection))),
+            "enemy_intent": self.fix_shape(np.array([intent_collection.tensor([intent]) for intent in obs.enemies_intent], np.float32), (self.MAX_NUM_ENEMIES, len(intent_collection))),
             "playing_card": card_collection.tensor([obs.playing_card], dtype=np.float32),
             "playing_card_step": np.zeros(self.MAX_CARD_STEP, np.float32) if obs.playing_card is None else np.eye(self.MAX_CARD_STEP, dtype=np.float32)[obs.playing_card.step],
             "card_target_type": np.zeros(len(CardTargetType), np.float32) if obs.playing_card is None else np.eye(len(CardTargetType), dtype=np.float32)[obs.playing_card.target_type().value],

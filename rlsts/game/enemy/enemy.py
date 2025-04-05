@@ -64,3 +64,6 @@ class Enemy(Target):
 
     def __lt__(self, other: Enemy) -> bool:
         return self.ID < other.ID
+
+    def rich(self, offset: int = 0, style: str = 'bold green') -> str:
+        return f'[{style}]{type(self).__name__}[{offset}][/{style}]'

@@ -12,7 +12,7 @@ class DualWield(Card):
         self.num = num
 
     def finish(self, energy: int) -> None:
-        if (card := self.choose_hand_card(self.targets[0])) != None:
+        if self.targets[0] != None and (card := self.choose_hand_card(self.targets[0])) != None:
             for n in range(self.num):
                 self.character.draw_to_hand(deepcopy(card))
 

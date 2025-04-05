@@ -1,7 +1,7 @@
 from .character import Character, Ironclad
 from .card import Deck
 from .enemy import Cultist, JawWorm
-from .combat import Combat, Act1EasyCombat, Act1HardCombat, Act1EliteCombat, Act1BossCombat
+from .combat import Combat, Act1EasyCombat, Act1HardCombat, Act1EliteCombat, Act1BossCombat, random_combat
 
 class SlayTheSpire():
     def __init__(self, character: Character = None) -> None:
@@ -21,3 +21,6 @@ class SlayTheSpire():
 
     def get_act1_boss_combat(self) -> Combat:
         return Act1BossCombat(character=self.character)
+
+    def get_random_combat(self) -> Combat:
+        return random_combat(character=self.character)

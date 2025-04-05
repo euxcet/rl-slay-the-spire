@@ -8,7 +8,7 @@ class Intimidate(Card):
             type=CardType.Skill,
             cost=0,
             target_types=[],
-            is_exhaust=True
+            is_exhaust=True,
         )
         self.debuff = debuff
 

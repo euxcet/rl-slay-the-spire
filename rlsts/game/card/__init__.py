@@ -191,7 +191,6 @@ def upgrade(card: Card) -> Card:
     card_plus_class = globals().get(card.__class__.__name__ + 'Plus')
     if card_plus_class != None:
         upgraded: Card = card_plus_class()
-        upgraded.cost = card.cost
         return upgraded
     else:
         return card

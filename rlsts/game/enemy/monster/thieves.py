@@ -24,8 +24,8 @@ class Looter(Enemy):
             if self.intent_pool.peek(self.combat.turn) < 0.5:
                 return AttackIntent(self, [self.lunge], is_multi=False)
             else:
-                return BlockIntent(self, [])
-        return BlockIntent(self, [])
+                return BlockIntent(self, [self.smoke])
+        return BlockIntent(self, [self.smoke])
 
 class Mugger(Enemy):
     def __init__(self, hp: int = None) -> None:
@@ -48,5 +48,5 @@ class Mugger(Enemy):
             if self.intent_pool.peek(self.combat.turn) < 0.5:
                 return AttackIntent(self, [self.lunge], is_multi=False)
             else:
-                return BlockIntent(self, [])
-        return BlockIntent(self, [])
+                return BlockIntent(self, [self.smoke])
+        return BlockIntent(self, [self.smoke])

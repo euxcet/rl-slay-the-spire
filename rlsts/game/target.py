@@ -74,6 +74,7 @@ class Target(ABC):
         for effect in self.effects:
             effect.on_receive_damage(damage, attacker)
         self.on_receive_damage(damage, attacker)
+        self.update_effects()
         return damage
 
     def receive_effect(self, new_effect: Effect) -> None:
@@ -81,6 +82,7 @@ class Target(ABC):
             return
         for effect in self.effects:
             new_effect = effect.modify_received_effect(new_effect)
+        self.update_effects()
         if new_effect == None or new_effect.stack == 0:
             return
         
@@ -88,11 +90,17 @@ class Target(ABC):
         for effect in self.effects:
             if type(effect) == type(new_effect):
                 effect.merge(new_effect)
-                # effect.set_stack(effect.stack + new_effect.stack)
                 if effect.stack == 0:
                     self.update_effects()
                 return
         self.effects.append(new_effect)
+
+    def remove_effect(self, effect_type: type) -> bool:
+        for effect in self.effects:
+            if isinstance(effect, effect_type):
+                self.effects.remove(effect)
+                return True
+        return False
 
     def prepare_attack(self, damage: int) -> int:
         for effect in self.effects:

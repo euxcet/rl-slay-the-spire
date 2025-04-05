@@ -1,5 +1,6 @@
 import os
 import ray
+import fire
 from ray import tune
 from ray.rllib.core.rl_module.rl_module import RLModuleSpec
 from ray.tune import CLIReporter
@@ -21,7 +22,19 @@ from ray.tune.result import TRAINING_ITERATION
 from .env.combat_env import CombatEnv
 from .module.combat_module import CombatModule
 
-def train():
+def _train(
+    num_env_runners: int = 1,
+    num_envs_per_env_runner: int = 1,
+    num_learners: int = 1,
+    num_cpus_per_learner: int | float | str = 1,
+    num_gpus_per_learner: int | float = 0,
+    train_batch_size: int = 16384,
+    minibatch_size: int = 128,
+    entropy_coeff: float = 0.01,
+    kl_coeff: float = 0.2,
+    kl_target: float = 0.004,
+    training_iteration: int = 10000,
+) -> None:
     ray.init(ignore_reinit_error=True)
     config = (
         PPOConfig()
@@ -32,12 +45,13 @@ def train():
             enable_env_runner_and_connector_v2=True,
         )
         .env_runners(
-            num_env_runners=1,
-            num_envs_per_env_runner=1,
+            num_env_runners=num_env_runners,
+            num_envs_per_env_runner=num_envs_per_env_runner,
         )
         .learners(
-            num_learners=1,
-            num_gpus_per_learner=0,
+            num_learners=num_learners,
+            num_cpus_per_learner=num_cpus_per_learner,
+            num_gpus_per_learner=num_gpus_per_learner,
         )
         .rl_module(
             rl_module_spec=RLModuleSpec(
@@ -46,11 +60,11 @@ def train():
             ),
         )
         .training(
-            train_batch_size=16384,
-            minibatch_size=128,
-            entropy_coeff=0.01,
-            kl_coeff=0.2,
-            kl_target=0.004,
+            train_batch_size=train_batch_size,
+            minibatch_size=minibatch_size,
+            entropy_coeff=entropy_coeff,
+            kl_coeff=kl_coeff,
+            kl_target=kl_target,
         )
     )
     os.environ["RAY_AIR_NEW_OUTPUT"] = "0"
@@ -77,7 +91,7 @@ def train():
         param_space=config,
         run_config=tune.RunConfig(
             stop= {
-                "training_iteration": 1000,
+                "training_iteration": training_iteration,
             },
             verbose=True,
             callbacks=[],
@@ -95,5 +109,8 @@ def train():
     ).fit()
     ray.shutdown()
 
+def train():
+    fire.Fire(_train)
+
 if __name__ == "__main__":
-    train()
+    fire.Fire(_train)
