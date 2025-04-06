@@ -22,6 +22,8 @@ class Character(Target):
         super().__init__(hp=hp, max_hp=max_hp)
         self.gold = gold
         self.deck = deck
+        for card in self.deck.cards:
+            card.set_character(self)
         self.orientation = orientation
         self.draw_pile: Pile = None
         self.hand_pile: Pile = None
@@ -29,6 +31,7 @@ class Character(Target):
         self.discard_pile: Pile = None
         self.energy: int = 0
         self.playing_card = None
+        self.card_played_turn = 0
 
     def is_in_combat(self) -> bool:
         return self.combat is not None
@@ -50,12 +53,20 @@ class Character(Target):
 
     def start_turn(self) -> None:
         super().start_turn()
-        self.draw(self.num_turn_draw())
+        self.card_played_turn = 0
+        num_draw = self.num_turn_draw()
+        innate_cards = [card for card in self.draw_pile if card.is_innate]
+        for card in innate_cards:
+            self.draw_to_hand(card)
+        num_draw = max(num_draw - len(innate_cards), 0)
+        self.draw(num_draw)
         self.energy += self.num_turn_energy()
 
     def end_turn(self) -> None:
         super().end_turn()
         self.energy = 0
+        for card in self.hand_pile:
+            card.on_turn_end()
         for card in self.hand_pile.cards.copy():
             if card.is_ethereal:
                 card.exhaust()
@@ -83,6 +94,7 @@ class Character(Target):
             # TODO: trigger on_draw?
             card.move_to(self.discard_pile)
         else:
+            card.on_draw()
             card.move_to(self.hand_pile)
 
     def num_turn_draw(self) -> int:
@@ -107,6 +119,10 @@ class Character(Target):
         return False
 
     def can_play_card(self, card_id: int) -> bool:
+        # for Normality(curse)
+        for card in self.hand_pile.cards:
+            if not card.can_play_card(self.card_played_turn):
+                return False
         return card_id >= 0 and card_id < len(self.hand_pile) and \
                 not self.hand_pile.cards[card_id].is_unplayable and \
                 (self.hand_pile.cards[card_id].cost is None or self.energy >= self.hand_pile.cards[card_id].cost)
@@ -114,7 +130,9 @@ class Character(Target):
     def play_card(self, card_index: int) -> None:
         if not self.can_play_card(card_index):
             print("punish")
+            raise Exception
             return
+        self.card_played_turn += 1
         self.playing_card = self.hand_pile.draw_index(card_index).move_to(None)
         used_energy = self.energy
         if self.playing_card.cost is None:
@@ -136,3 +154,11 @@ class Character(Target):
 
     def add_cards(self, cards: list['Card']) -> None:
         self.deck.add_cards(cards)
+
+    def receive_gold(self, gold: int) -> int:
+        self.gold += gold
+        return self.gold
+    
+    def lose_gold(self, gold: int) -> int:
+        self.gold = max(0, self.gold - gold)
+        return self.gold

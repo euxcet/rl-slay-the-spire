@@ -50,6 +50,10 @@ class Target(ABC):
         for effect in self.effects:
             effect.on_block(block)
 
+    # TODO
+    def receive_relic(self) -> None:
+        ...
+
     def receive_damage(self, damage: int, attacker: Target, do_effect: bool = True) -> int:
         if self.died:
             return 0

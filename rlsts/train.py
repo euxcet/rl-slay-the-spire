@@ -25,6 +25,8 @@ from .module.combat_module import CombatModule
 def _train(
     num_env_runners: int = 1,
     num_envs_per_env_runner: int = 1,
+    num_cpus_per_env_runner: int | float = 1,
+    num_gpus_per_env_runner: int | float = 0.05,
     num_learners: int = 1,
     num_cpus_per_learner: int | float | str = 1,
     num_gpus_per_learner: int | float = 0,
@@ -47,6 +49,8 @@ def _train(
         .env_runners(
             num_env_runners=num_env_runners,
             num_envs_per_env_runner=num_envs_per_env_runner,
+            num_cpus_per_env_runner=num_cpus_per_env_runner,
+            num_gpus_per_env_runner=num_gpus_per_env_runner,
         )
         .learners(
             num_learners=num_learners,
@@ -96,7 +100,7 @@ def _train(
             verbose=True,
             callbacks=[],
             checkpoint_config=tune.CheckpointConfig(
-                checkpoint_frequency=1,
+                checkpoint_frequency=25,
                 checkpoint_at_end=True,
             ),
             progress_reporter=progress_reporter,

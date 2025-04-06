@@ -10,4 +10,4 @@ class SentryBoltIntent(Intent):
 
     def perform(self) -> None:
         for _ in range(self.values[0]):
-            Dazed().to(self.combat).move_to(self.character.discard_pile, is_random=True)
+            Dazed().to_combat(self.combat).move_to(self.character.discard_pile, is_random=True)

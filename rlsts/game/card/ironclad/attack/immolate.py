@@ -14,7 +14,7 @@ class Immolate(Card):
     def finish(self, energy: int) -> None:
         for enemy in self.combat.enemies.copy():
             self.attack(enemy, self.damage)
-        Burn().to(self.combat).move_to(self.discard_pile)
+        Burn().to_combat(self.combat).move_to(self.discard_pile)
 
 class ImmolatePlus(Immolate):
     def __init__(self) -> None:

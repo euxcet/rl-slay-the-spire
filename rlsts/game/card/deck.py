@@ -97,7 +97,7 @@ class Deck():
     def __init__(self, cards: list[Card]) -> None:
         self.cards = cards
 
-    def add_cards(self, cards: list[Card]) -> None:
+    def add_cards(self, cards: Card | list[Card]) -> None:
         if isinstance(cards, list):
             self.cards.extend(cards)
         else:

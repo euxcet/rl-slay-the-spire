@@ -13,6 +13,6 @@ class HexaghostSearIntent(AttackIntent):
         super().perform()
         for _ in range(self.values[1]):
             if self.enemy.upgrade_burn:
-                BurnPlus().to(self.combat).move_to(self.character.discard_pile, is_random=True)
+                BurnPlus().to_combat(self.combat).move_to(self.character.discard_pile, is_random=True)
             else:
-                Burn().to(self.combat).move_to(self.character.discard_pile, is_random=True)
+                Burn().to_combat(self.combat).move_to(self.character.discard_pile, is_random=True)

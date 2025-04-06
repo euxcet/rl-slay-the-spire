@@ -5,6 +5,7 @@ import random
 from typing import Optional
 from ..game.slay_the_spire import SlayTheSpire
 from ..game.combat import Combat, CombatObservation, random_combat
+from ..game.combat import Act1EasyCombat, Act1BossCombat, Act1EliteCombat, Act1HardCombat
 from ..game.character import Ironclad
 from ..game.enemy import Cultist
 from ..game.enemy.intent import intent_collection
@@ -92,7 +93,8 @@ class CombatEnv(gym.Env):
     def reset(self, *, seed = None, options = None) -> tuple:
         random.seed(seed)
         self.num_step = 0
-        self.game = random_combat(Ironclad(Deck.ironclad_random_deck()))
+        self.game = Act1EasyCombat(Ironclad(Deck.ironclad_starter_deck()))
+        # self.game = random_combat(Ironclad(Deck.ironclad_random_deck()))
         obs = self.game.reset()
         return self.to_env_obs(obs), {"env_state": "reset"}
 

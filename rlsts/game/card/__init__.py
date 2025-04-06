@@ -16,6 +16,21 @@ from .status.slimed import Slimed
 from .status.dazed import Dazed
 from .status.burn import Burn, BurnPlus
 
+# ./curse
+from .curse.ascendars_bane import AscendarsBane
+from .curse.clumsy import Clumsy
+from .curse.curse_of_the_bell import CurseOfTheBell
+from .curse.decay import Decay
+from .curse.doubt import Doubt
+from .curse.injury import Injury
+from .curse.necronomicurse import Necronomicurse
+from .curse.normality import Normality
+from .curse.pain import Pain
+from .curse.parasite import Parasite
+from .curse.regret import Regret
+from .curse.shame import Shame
+from .curse.writhe import Writhe
+
 # ./ironclad/attack
 from .ironclad.attack.wild_strike import WildStrike, WildStrikePlus
 from .ironclad.attack.pummel import Pummel, PummelPlus
@@ -105,6 +120,21 @@ card_collection.add(Wound)
 card_collection.add(Slimed)
 card_collection.add(Dazed)
 card_collection.add([Burn, BurnPlus])
+
+# ./curse
+card_collection.add(AscendarsBane)
+card_collection.add(Clumsy)
+card_collection.add(CurseOfTheBell)
+card_collection.add(Decay)
+card_collection.add(Doubt)
+card_collection.add(Injury)
+card_collection.add(Necronomicurse)
+card_collection.add(Normality)
+card_collection.add(Pain)
+card_collection.add(Parasite)
+card_collection.add(Regret)
+card_collection.add(Shame)
+card_collection.add(Writhe)
 
 # ./ironclad/attack
 card_collection.add([WildStrike, WildStrikePlus])

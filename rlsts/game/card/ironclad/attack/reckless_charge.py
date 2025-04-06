@@ -14,7 +14,7 @@ class RecklessCharge(Card):
     def finish(self, energy: int) -> None:
         enemy = self.get_enemy(self.targets[0])
         self.attack(enemy, self.damage)
-        Dazed().to(self.combat).move_to(self.draw_pile)
+        Dazed().to_combat(self.combat).move_to(self.draw_pile)
 
 class RecklessChargePlus(RecklessCharge):
     def __init__(self) -> None:

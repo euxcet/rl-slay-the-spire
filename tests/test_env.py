@@ -25,7 +25,6 @@ class TestEnv():
     def test_env(self):
         console = Console()
         result_root = '/Users/euxcet/ray_results/'
-        # checkpoint_path = '/Users/euxcet/ray_results/PPO_2025-03-24_09-42-02/PPO_CombatEnv_2f410_00000_0_2025-03-24_09-42-02/checkpoint_000000'
         checkpoint_path = self.get_nearest_checkpoint(result_root)
         print(checkpoint_path)
 

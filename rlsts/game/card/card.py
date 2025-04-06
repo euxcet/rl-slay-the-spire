@@ -45,6 +45,8 @@ class Card(ABC):
         is_unplayable: bool = False,
         is_ethereal: bool = False,
         is_exhaust: bool = False,
+        is_innate: bool = False,
+        character: 'Character' = None,
     ) -> None:
         self.rarity = rarity
         self.type = type
@@ -53,13 +55,14 @@ class Card(ABC):
         self._is_unplayable = is_unplayable
         self.is_ethereal = is_ethereal
         self.is_exhaust = is_exhaust
+        self.is_innate = is_innate
         self.combat: 'Combat' = None
         self.target_types = target_types
         self.step = 0
         self.pile: Pile = None
         # for x
         self.energy = 0
-
+        self.character = character
     @property
     def cost(self) -> int:
         return self._cost
@@ -74,23 +77,19 @@ class Card(ABC):
 
     @property
     def draw_pile(self) -> 'Pile':
-        return self.combat.character.draw_pile
+        return self.character.draw_pile
 
     @property
     def hand_pile(self) -> 'Pile':
-        return self.combat.character.hand_pile
+        return self.character.hand_pile
 
     @property
     def discard_pile(self) -> 'Pile':
-        return self.combat.character.discard_pile
+        return self.character.discard_pile
 
     @property
     def exhaust_pile(self) -> 'Pile':
-        return self.combat.character.exhaust_pile
-
-    @property
-    def character(self) -> 'Character':
-        return self.combat.character
+        return self.character.exhaust_pile
 
     @property
     def enemies(self) -> list['Enemy']:
@@ -127,6 +126,8 @@ class Card(ABC):
         self.step = 0
         self.targets = []
         self.on_play()
+        for card in self.draw_pile:
+            card.on_other_play()
         return self.next_step()
 
     def random_play(self, energy: int):
@@ -150,6 +151,9 @@ class Card(ABC):
 
     def can_choose(self, target: int) -> bool:
         return target < self.combat.MAX_ACTION and self.get_action_mask()[target] > 0
+
+    def can_remove(self) -> bool:
+        return True
 
     def get_action_mask(self) -> np.ndarray:
         if isinstance(self.target_types[self.step], tuple):
@@ -186,12 +190,17 @@ class Card(ABC):
                         mask[i] = constraint(self.exhaust_pile[i])
         return mask
 
-    def to(self, combat: Combat) -> Card:
+    def to_combat(self, combat: Combat) -> Card:
         self.combat = combat
+        self.character = combat.character
         return self
     
     def to_pile(self, pile: 'Pile') -> Card:
         self.pile = pile
+        return self
+
+    def set_character(self, character: 'Character') -> Card:
+        self.character = character
         return self
 
     # Put the card on top of the pile
@@ -228,7 +237,13 @@ class Card(ABC):
     def on_play(self) -> None:
         ...
 
+    def on_other_play(self) -> None:
+        ...
+
     def on_draw(self) -> None:
+        ...
+
+    def on_turn_end(self) -> None:
         ...
 
     def on_turn_discard(self) -> None:
@@ -237,9 +252,15 @@ class Card(ABC):
     def on_discard(self) -> None:
         ...
 
+    def on_remove(self) -> None:
+        ...
+
     def on_exhaust(self) -> None:
         for effect in self.combat.character.effects:
             effect.on_exhaust(self)
+
+    def can_play_card(self, card_played_turn: int) -> bool:
+        return True
 
     def get_enemy(self, target: int) -> Enemy:
         return self.enemies[target]

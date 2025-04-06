@@ -14,7 +14,7 @@ class PowerThrough(Card):
 
     def finish(self, energy: int) -> None:
         for num in range(self.wound):
-            self.character.draw_to_hand(Wound().to(self.combat))
+            self.character.draw_to_hand(Wound().to_combat(self.combat))
         self.add_block(self.block)
 
 class PowerThroughPlus(PowerThrough):

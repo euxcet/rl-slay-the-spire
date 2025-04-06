@@ -1,21 +1,19 @@
 from rich.console import Console
-from rlsts.game.slay_the_spire import SlayTheSpire
+from rlsts.game.character import Ironclad
+from rlsts.game.combat import Combat, random_combat
+from rlsts.game.card.deck import Deck
 from rlsts.game.card.pile import Pile
 from rlsts.game.card.card import CardTargetType
 
-class TestGame():
+class TestCombat():
 
     def print_pile(self, pile: Pile, label: str, console: Console, offset = 0):
         console.log(label)
         console.log(pile.rich(offset=offset))
 
-    def test_game(self):
+    def test_combat(self):
         console = Console()
-        game = SlayTheSpire()
-        # combat = game.get_act1_easy_combat()
-        # combat = game.get_act1_boss_combat()
-        # combat = game.get_act1_elite_combat()
-        combat = game.get_random_combat()
+        combat = random_combat(Ironclad(deck=Deck.ironclad_random_deck()))
         obs = combat.reset()
         console.log(obs.rich())
         while True:
