@@ -1,5 +1,5 @@
 import numpy as np
-from .combat_observation import CombatObservation
+from ..observation.combat_observation import CombatObservation
 from ..character import Character
 from ..enemy import Enemy
 from copy import deepcopy
@@ -13,7 +13,7 @@ class Combat():
         character: Character,
         enemies_type: list[type],
     ) -> None:
-        self.origin_character = character
+        self.character = character
         self.enemies_type = enemies_type
 
     def update_enemies(self) -> None:
@@ -45,11 +45,11 @@ class Combat():
         self.turn = 0
         self.is_over = False
         self.is_game_over = False
-        self.character = deepcopy(self.origin_character)
         self.enemies: list[Enemy] = [self.create_enemy(enemy) for enemy in self.enemies_type]
         self.enemies.sort()
         for enemy in self.enemies:
             enemy.start_combat(self)
+            enemy.hp = 1
         self.character.start_combat(self)
         self.character.start_turn()
         self.update_enemies()

@@ -27,6 +27,9 @@ class Collection():
             else:
                 r[self.types[type(t)]] += v
         return r
+
+    def find(self, f) -> list[type]:
+        return [t for t in self.types.keys() if f(t)]
     
     def __len__(self) -> int:
         return self.num

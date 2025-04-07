@@ -97,7 +97,7 @@ class CombatObservation():
         playing_card = 'None' if self.playing_card is None else f'[bold yellow]{type(self.playing_card).__name__}[/bold yellow] {self.playing_step}'
         return f'\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n' + \
                f'[bold blue]{self.character_type.__name__}[/bold blue]\n' + \
-               f'hp: [bold red]{self.character_hp}[/bold red] block: [bold green]{self.character_block}[/bold green] energy: [bold yellow]{self.character_energy}[/bold yellow]\n' + \
+               f'hp: [bold red]{self.character_hp}/{self.character_max_hp}[/bold red] block: [bold green]{self.character_block}[/bold green] energy: [bold yellow]{self.character_energy}[/bold yellow]\n' + \
                self.format_effect(self.character_effects) + \
                f'cards: {cards_str}' + \
                f'playing: {playing_card}' + \

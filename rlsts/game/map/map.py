@@ -21,7 +21,8 @@ class MapLocation(Enum):
         #        [0.49, 0.22, 0.16, 0.08, 0.05, 0]
 
 class MapRoom():
-    def __init__(self, floor: int, column: int, location: MapLocation = MapLocation.Monster) -> None:
+    def __init__(self, act: int, floor: int, column: int, location: MapLocation = MapLocation.Monster) -> None:
+        self.act = act
         self.floor = floor
         self.column = column
         if location == MapLocation.Neow:
@@ -54,12 +55,27 @@ class MapRoom():
             return ' '
         return ['M', '?', 'E', 'R', '$', 'T'][self.location.value]
 
+    def __lt__(self, other) -> bool:
+        return self.floor < other.floor or (self.floor == other.floor and self.column < other.column)
+
+    def __hash__(self) -> int:
+        return self.floor * 7 + self.column
+
 class Map():
-    def __init__(self, rooms: list[list[MapRoom]], neow_room: MapRoom, boss_room: MapRoom) -> None:
+    def __init__(self, rooms: list[list[MapRoom]], neow_room: MapRoom = None, boss_room: MapRoom = None) -> None:
         self.rooms = rooms
         self.neow_room = neow_room
         self.boss_room = boss_room
         self.current_room = neow_room
+
+    def step(self, action: int) -> None:
+        self.current_room = self.current_room.edges[action]
+    
+    def options(self) -> None:
+        return [edge != None for edge in self.current_room.edges]
+
+    def is_last_room(self) -> None:
+        return sum(self.options()) == 0
 
     @staticmethod
     def is_valid_location(room: MapRoom, location: MapLocation, exist: list[MapLocation]) -> bool:
@@ -82,8 +98,9 @@ class Map():
         return True
 
     @staticmethod
-    def generate() -> Map:
-        rooms = [[MapRoom(i, j) for j in range(7)] for i in range(15)]
+    def generate(act: int, seed: int = None) -> Map:
+        random.seed(seed)
+        rooms = [[MapRoom(act=act, floor=i, column=j) for j in range(7)] for i in range(15)]
         for i in range(15):
             for j in range(6):
                 rooms[i][j].set_right_sibling(rooms[i][j + 1])
@@ -118,12 +135,16 @@ class Map():
                                 location = MapLocation.Treasure
                             else:
                                 location = random.choices(MapLocation.prob()[0], weights=MapLocation.prob()[1])[0]
+                                retry = 0
                                 while not Map.is_valid_location(son, location, exist):
                                     location = random.choices(MapLocation.prob()[0], MapLocation.prob()[1])[0]
+                                    retry += 1
+                                    if retry > 20:
+                                        return Map.generate(None if seed == None else seed + 1)
                             son.location = location
                             exist.append(location)
-        neow_room = MapRoom(floor=-1, column=0, locaiton=MapLocation.Neow)
-        boss_room = MapRoom(floor=15, column=0, locaiton=MapLocation.Boss)
+        neow_room = MapRoom(act=act, floor=-1, column=0, location=MapLocation.Neow)
+        boss_room = MapRoom(act=act, floor=15, column=0, location=MapLocation.Boss)
         for j in range(7):
             if rooms[0][j].vis:
                 neow_room.edges.append(rooms[0][j])

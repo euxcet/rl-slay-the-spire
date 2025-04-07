@@ -1,16 +1,26 @@
 import math
 from abc import ABC, abstractmethod
-from .event_observation import EventObservation
+from ..observation.event_observation import EventObservation
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..character import Character
 
 class Event(ABC):
-    def __init__(self, character: 'Character') -> None:
+    act = []
+    is_regular = True
+
+    def __init__(
+        self, 
+        character: 'Character',
+        # act: list[int],
+        # is_regular: bool,
+    ) -> None:
         self.character = character
         self.is_removing = False
         self.is_upgrading = False
         self.is_transforming = False
+        # self.act = act
+        # self.is_regular = is_regular
 
     @property
     def valid(self) -> bool:
@@ -36,12 +46,16 @@ class Event(ABC):
     def heal(self, percent: float) -> None:
         self.character.hp = min(self.character.hp + math.floor(self.character.max_hp * percent), self.character.max_hp)
     
-    def lose_hp(self, percent: float) -> None:
-        self.character.hp = max(self.character.hp - math.floor(self.character.max_hp * percent), 0)
+    def lose_hp(self, num: int = None, percent: float = None) -> None:
+        if num is None:
+            num = math.floor(self.character.max_hp * percent)
+        self.character.hp = max(self.character.hp - num, 0)
 
-    def lose_max_hp(self, percent: float) -> None:
-        self.character.max_hp = max(self.character.max_hp - math.floor(self.character.max_hp * percent), 0)
-        self.character.hp = min(self.character.hp, self.character.max_hp)
+    def lose_max_hp(self, num: int = None, percent: float = None) -> None:
+        self.character.lose_max_hp(num=num, percent=percent)
+
+    def gain_max_hp(self, num: int = None, percent: float = None) -> None:
+        self.character.gain_max_hp(num=num, percent=percent)
 
     def remove_card(self, action: int) -> None:
         # len(deck) > 0
@@ -68,5 +82,14 @@ class Event(ABC):
         return None
 
     def transform_card_obs(self) -> EventObservation:
+        self.is_transforming = True
+        ...
+
+    def duplicate_card(self, action: int) -> None:
+        # len(deck) > 0
+        self.is_transforming = False
+        return None
+
+    def duplicate_card_obs(self) -> EventObservation:
         self.is_transforming = True
         ...

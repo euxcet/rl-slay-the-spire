@@ -13,9 +13,7 @@ class Pile():
         cards: list[Card] = None,
         combat: 'Combat' = None,
     ) -> None:
-        self.cards: list[Card] = []
-        if cards is not None:
-            self.cards = deepcopy(cards)
+        self.cards: list[Card] = [] if cards == None else cards.copy()
         if combat is not None:
             for card in self.cards:
                 card.combat = combat

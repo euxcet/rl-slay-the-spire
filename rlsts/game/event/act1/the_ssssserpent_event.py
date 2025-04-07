@@ -1,5 +1,4 @@
-from ..event_observation import EventObservation
-from ..event import Event
+from ...observation.event_observation import EventObservation
 from ..options_event import OptionsEvent
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -7,6 +6,9 @@ if TYPE_CHECKING:
 from ...card.curse.doubt import Doubt
 
 class TheSsssserpentEvent(OptionsEvent):
+    act = [1]
+    is_regular = True
+
     def __init__(self, character: 'Character') -> None:
         super().__init__(character=character)
         self.gold = 150
@@ -17,8 +19,13 @@ class TheSsssserpentEvent(OptionsEvent):
         self.options = [True] * len(self.options_label)
 
     def step(self, action: int) -> EventObservation:
+        if super().step(action):
+            return None
         if action == 0:
             self.character.receive_gold(self.gold)
             self.character.deck.add_cards(Doubt())
         elif action == 1:
-            return None
+            ...
+        else:
+            return self.observe()
+        return None

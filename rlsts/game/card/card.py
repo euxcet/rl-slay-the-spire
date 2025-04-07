@@ -58,11 +58,19 @@ class Card(ABC):
         self.is_innate = is_innate
         self.combat: 'Combat' = None
         self.target_types = target_types
-        self.step = 0
         self.pile: Pile = None
+        self.step = 0
         # for x
         self.energy = 0
         self.character = character
+
+    def reset(self) -> None:
+        self._cost = self.origin_cost
+        self.step = 0
+        self.combat = None
+        self.pile = None
+        self.energy = 0
+
     @property
     def cost(self) -> int:
         return self._cost

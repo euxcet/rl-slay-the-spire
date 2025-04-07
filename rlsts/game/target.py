@@ -1,4 +1,5 @@
 from __future__ import annotations
+import math
 from abc import ABC, abstractmethod
 from .effect import Effect
 from typing import TYPE_CHECKING
@@ -140,6 +141,18 @@ class Target(ABC):
             else:
                 for effect in self.effects:
                     effect.on_lose_hp(hp)
+
+    def lose_max_hp(self, num: int = None, percent: float = None) -> None:
+        if num is None:
+            num = math.floor(self.max_hp * percent)
+        self.max_hp = max(self.max_hp - num, 0)
+        self.hp = min(self.hp, self.max_hp)
+
+    def gain_max_hp(self, num: int = None, percent: float = None) -> None:
+        if num is None:
+            num = math.floor(self.max_hp * percent)
+        self.hp = math.floor(self.hp / self.max_hp * (self.max_hp + num))
+        self.max_hp += num
 
     def on_receive_damage(self, damage: int, attacker: Target) -> None:
         ...

@@ -7,9 +7,9 @@ from ray.rllib.core import DEFAULT_MODULE_ID
 from ray.rllib.core.columns import Columns
 from ray.rllib.utils.numpy import convert_to_numpy, softmax
 
-class TestRandomAction():
+class TestCombatRandomAction():
 
-    def test_env(self):
+    def test_combat_random_action(self):
         console = Console()
         env = CombatEnv()
         obs, info = env.reset()

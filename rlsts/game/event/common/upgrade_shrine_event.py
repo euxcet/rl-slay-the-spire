@@ -4,35 +4,24 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ...character import Character
 
-class TheClericEvent(OptionsEvent):
-    act = [1]
-    is_regular = True
+class UpgradeShrineEvent(OptionsEvent):
+    act = [1, 2, 3]
+    is_regular = False
 
     def __init__(self, character: 'Character') -> None:
         super().__init__(character=character)
-        self.purify_gold = 50
         self.options_label = [
-            '[Heal] Lose 35 Gold. Heal 25% of your Max HP.',
-            f'[Purify] Lose {self.purify_gold} Gold. Remove a card from your deck.',
+            '[Pray] Upgrade a card. (Only available if the player has an upgradeable cards.)',
             '[Leave] Nothing happens.',
         ]
         self.options = [True] * len(self.options_label)
-        
-    @property
-    def valid(self) -> bool:
-        return self.character.gold >= 35
 
     def step(self, action: int) -> EventObservation:
         if super().step(action):
             return None
         if action == 0:
-            self.character.lose_gold(35)
-            self.heal(0.25)
+            return self.upgrade_card_obs()
         elif action == 1:
-            self.character.lose_gold(self.purify_gold)
-            return self.remove_card_obs()
-        elif action == 2:
-            ...
+            return None
         else:
             return self.observe()
-        return None

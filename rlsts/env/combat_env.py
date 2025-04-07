@@ -4,7 +4,8 @@ import numpy as np
 import random
 from typing import Optional
 from ..game.slay_the_spire import SlayTheSpire
-from ..game.combat import Combat, CombatObservation, random_combat
+from ..game.observation.combat_observation import CombatObservation
+from ..game.combat import Combat, random_combat
 from ..game.combat import Act1EasyCombat, Act1BossCombat, Act1EliteCombat, Act1HardCombat
 from ..game.character import Ironclad
 from ..game.enemy import Cultist

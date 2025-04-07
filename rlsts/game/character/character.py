@@ -32,6 +32,7 @@ class Character(Target):
         self.energy: int = 0
         self.playing_card = None
         self.card_played_turn = 0
+        self.act = 1
 
     def is_in_combat(self) -> bool:
         return self.combat is not None
