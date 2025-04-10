@@ -1,10 +1,10 @@
 from ..card import Card, CardRarity, CardType, CardTargetType
 
 class Strike(Card):
+    rarity = CardRarity.Starter
+    type = CardType.Attack
     def __init__(self, damage: int = 6) -> None:
         super().__init__(
-            rarity=CardRarity.Starter,
-            type=CardType.Attack,
             cost=1,
             target_types=[CardTargetType.Enemy],
         )

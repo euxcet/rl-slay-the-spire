@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect.debuff.weak import Weak
 
 class Intimidate(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, debuff: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=0,
             target_types=[],
             is_exhaust=True,

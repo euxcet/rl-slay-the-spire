@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect.debuff.vulnerable import Vulnerable
 
 class Dropkick(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Attack
     def __init__(self, damage: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Attack,
             cost=1,
             target_types=[CardTargetType.Enemy],
         )

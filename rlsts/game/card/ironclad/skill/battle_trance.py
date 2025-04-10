@@ -2,10 +2,10 @@ from ....effect.debuff.no_draw import NoDraw
 from ...card import Card, CardRarity, CardType
 
 class BattleTrance(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, draw: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=0,
             target_types=[],
         )

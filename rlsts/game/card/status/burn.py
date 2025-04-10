@@ -1,10 +1,10 @@
 from ..card import Card, CardRarity, CardType, CardTargetType
 
 class Burn(Card):
+    rarity = CardRarity.Common
+    type = CardType.Status
     def __init__(self, damage: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Status,
             cost=0,
             target_types=[],
             is_unplayable=True,

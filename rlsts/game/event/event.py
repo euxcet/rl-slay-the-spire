@@ -1,6 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from ..observation.event_observation import EventObservation
+from ..observation.modify_deck_observation import ModifyDeckObservation
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..character import Character
@@ -62,7 +63,7 @@ class Event(ABC):
         self.is_removing = False
         return None
 
-    def remove_card_obs(self) -> EventObservation:
+    def remove_card_obs(self) -> ModifyDeckObservation:
         self.is_removing = True
         ...
 
@@ -72,7 +73,7 @@ class Event(ABC):
         self.is_upgrading = False
         return None
 
-    def upgrade_card_obs(self) -> EventObservation:
+    def upgrade_card_obs(self) -> ModifyDeckObservation:
         self.is_upgrading = True
         ...
 
@@ -81,7 +82,7 @@ class Event(ABC):
         self.is_transforming = False
         return None
 
-    def transform_card_obs(self) -> EventObservation:
+    def transform_card_obs(self) -> ModifyDeckObservation:
         self.is_transforming = True
         ...
 
@@ -90,6 +91,6 @@ class Event(ABC):
         self.is_transforming = False
         return None
 
-    def duplicate_card_obs(self) -> EventObservation:
+    def duplicate_card_obs(self) -> ModifyDeckObservation:
         self.is_transforming = True
         ...

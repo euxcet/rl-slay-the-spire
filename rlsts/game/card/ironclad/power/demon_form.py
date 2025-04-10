@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.ritual import Ritual
 
 class DemonForm(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Power
     def __init__(self, buff: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Power,
             cost=3,
             target_types=[],
         )

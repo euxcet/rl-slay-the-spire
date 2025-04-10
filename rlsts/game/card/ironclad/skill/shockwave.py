@@ -3,10 +3,10 @@ from ....effect.debuff.weak import Weak
 from ....effect.debuff.vulnerable import Vulnerable
 
 class Shockwave(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, debuff: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=2,
             target_types=[],
             is_exhaust=True,

@@ -8,6 +8,7 @@ from .merchant_location import MerchantLocation
 from .treasure_location import TreasureLocation
 from .event_location import EventLocation
 from ..map import MapRoom, MapLocation
+from ..game_status import GameStatus
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..character import Character
@@ -15,14 +16,11 @@ if TYPE_CHECKING:
 def create_location(
     room: MapRoom,
     character: 'Character',
-    num_monster_combat: int,
-    num_event_not_monster: int,
-    num_event_not_treasure: int,
-    num_event_not_merchant: int,
+    game_status: GameStatus,
 ) -> Location:
-    return EventLocation(room=room, character=character, num_monster_combat=num_monster_combat)
+    # return EventLocation(room=room, character=character, game_status=game_status)
     if room.location == MapLocation.Monster:
-        return MonsterLocation(room=room, character=character, num_monster_combat=num_monster_combat)
+        return MonsterLocation(room=room, character=character, game_status=game_status)
     elif room.location == MapLocation.Neow:
         return NeowLocation(room=room, character=character)
     elif room.location == MapLocation.Boss:
@@ -34,16 +32,16 @@ def create_location(
     elif room.location == MapLocation.Treasure:
         return TreasureLocation(room=room, character=character)
     elif room.location == MapLocation.Event:
-        event_prob = 1 - 0.1 - 0.1 * num_event_not_monster \
-                     - 0.02 - 0.02 * num_event_not_treasure \
-                     - 0.03 - 0.03 * num_event_not_merchant
+        event_prob = 1 - 0.1 - 0.1 * game_status.num_event_not_monster \
+                     - 0.02 - 0.02 * game_status.num_event_not_treasure \
+                     - 0.03 - 0.03 * game_status.num_event_not_merchant
         location = choose_with_prob([
-            (MonsterLocation, 0.1 + 0.1 * num_event_not_monster),
-            (TreasureLocation, 0.02 + 0.02 * num_event_not_treasure),
-            (MerchantLocation, 0.03 + 0.03 * num_event_not_merchant),
+            (MonsterLocation, 0.1 + 0.1 * game_status.num_event_not_monster),
+            (TreasureLocation, 0.02 + 0.02 * game_status.num_event_not_treasure),
+            (MerchantLocation, 0.03 + 0.03 * game_status.num_event_not_merchant),
             (EventLocation, event_prob),
         ])
-        return location(room=room, character=character, num_monster_combat=num_monster_combat)
+        return location(room=room, character=character, game_status=game_status)
 
     # Monster = 0
     # Event = 1

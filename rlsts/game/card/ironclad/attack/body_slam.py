@@ -2,10 +2,10 @@ from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class BodySlam(Card):
+    rarity = CardRarity.Common
+    type = CardType.Attack
     def __init__(self, cost: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Attack,
             cost=cost,
             target_types=[CardTargetType.Enemy],
         )

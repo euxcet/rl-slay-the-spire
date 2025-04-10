@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Exhume(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Skill
     def __init__(self, cost: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Skill,
             cost=cost,
             target_types=[CardTargetType.Exhaust],
             is_exhaust=True,

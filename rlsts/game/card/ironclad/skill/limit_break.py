@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect.buff.strength import Strength
 
 class LimitBreak(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Skill
     def __init__(self, is_exhaust: bool = True) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Skill,
             cost=1,
             target_types=[],
             is_exhaust=is_exhaust,

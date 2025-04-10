@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Pummel(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Attack
     def __init__(self, times: int = 4) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Attack,
             cost=1,
             target_types=[CardTargetType.Enemy],
             is_exhaust=True,

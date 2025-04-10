@@ -203,4 +203,4 @@ Temporary Items
 *.log
 gamelog/
 
-_tmp.py
+_tmp*.py

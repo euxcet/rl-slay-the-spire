@@ -2,10 +2,10 @@ import pydash as _
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class BurningPact(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, draw: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=1,
             target_types=[CardTargetType.Hand],
         )

@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.combust_buff import CombustBuff
 
 class Combust(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Power
     def __init__(self, damage: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Power,
             cost=1,
             target_types=[],
         )

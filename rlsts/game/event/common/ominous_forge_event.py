@@ -13,7 +13,7 @@ class OminousForgeEvent(OptionsEvent):
         super().__init__(character=character)
         self.options_label = [
             '[Forge] Upgrade a card (Requires an upgradable card).',
-            '[Rummage] Obtain  Warped Tongs. Become Cursed - Pain.',
+            '[Rummage] Obtain Warped Tongs. Become Cursed - Pain.',
             '[Leave] Nothing happens.',
         ]
         self.options = [True] * len(self.options_label)

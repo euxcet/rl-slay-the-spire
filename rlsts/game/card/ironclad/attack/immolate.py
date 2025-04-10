@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ...status.burn import Burn
 
 class Immolate(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Attack
     def __init__(self, damage: int = 21) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Attack,
             cost=2,
             target_types=[],
         )

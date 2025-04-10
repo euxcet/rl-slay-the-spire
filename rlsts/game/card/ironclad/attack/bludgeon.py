@@ -2,10 +2,10 @@ from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Bludgeon(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Attack
     def __init__(self, damage: int = 32) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Attack,
             cost=3,
             target_types=[CardTargetType.Enemy],
         )

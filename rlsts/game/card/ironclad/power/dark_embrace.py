@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.dark_embrace_buff import DarkEmbraceBuff
 
 class DarkEmbrace(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Power
     def __init__(self, cost: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Power,
             cost=cost,
             target_types=[],
         )

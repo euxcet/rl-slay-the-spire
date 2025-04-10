@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.brutality_buff import BrutalityBuff
 
 class Brutality(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Power
     def __init__(self) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Power,
             cost=0,
             target_types=[],
         )

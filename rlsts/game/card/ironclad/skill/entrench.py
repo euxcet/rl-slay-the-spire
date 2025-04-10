@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Entrench(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, cost: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=cost,
             target_types=[],
         )

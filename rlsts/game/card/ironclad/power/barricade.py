@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.barricade_buff import BarricadeBuff
 
 class Barricade(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Power
     def __init__(self, cost: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Power,
             cost=cost,
             target_types=[],
         )

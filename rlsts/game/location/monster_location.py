@@ -4,11 +4,12 @@ if TYPE_CHECKING:
     from ..character import Character
 from .location import Location
 from ..combat import Act1EasyCombat, Act1HardCombat
+from ..game_status import GameStatus
 
 class MonsterLocation(Location):
-    def __init__(self, room: 'MapRoom', character: 'Character', num_monster_combat: int, **kwargs) -> None:
+    def __init__(self, room: 'MapRoom', character: 'Character', game_status: GameStatus, **kwargs) -> None:
         super().__init__(room=room, character=character)
-        self.num_monster_combat = num_monster_combat
+        self.num_monster_combat = game_status.num_monster_combat
 
     def reset(self):
         if self.num_monster_combat < 3:

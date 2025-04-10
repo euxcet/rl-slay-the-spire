@@ -2,10 +2,10 @@ import pydash as _
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class TrueGrit(Card):
+    rarity = CardRarity.Common
+    type = CardType.Skill
     def __init__(self, block: int = 7) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Skill,
             cost=1,
             target_types=[],
         )

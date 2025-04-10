@@ -2,10 +2,10 @@ import pydash as _
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Warcry(Card):
+    rarity = CardRarity.Common
+    type = CardType.Skill
     def __init__(self, draw: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Skill,
             cost=0,
             target_types=[CardTargetType.Hand],
         )

@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Whirlwind(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Attack
     def __init__(self, damage: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Attack,
             cost=None, # x
             target_types=[],
         )

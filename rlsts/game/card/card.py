@@ -35,11 +35,11 @@ class CardTargetType(Enum):
 
 class Card(ABC):
     ID = -1
+    rarity: CardRarity = CardRarity.Common
+    type: CardType = CardType.Attack
 
     def __init__(
         self,
-        rarity: CardRarity,
-        type: CardType,
         cost: int,
         target_types: list[CardTargetType],
         is_unplayable: bool = False,
@@ -48,8 +48,8 @@ class Card(ABC):
         is_innate: bool = False,
         character: 'Character' = None,
     ) -> None:
-        self.rarity = rarity
-        self.type = type
+        # self.rarity = rarity
+        # self.type = type
         self._cost = cost
         self.origin_cost = cost
         self._is_unplayable = is_unplayable
@@ -323,3 +323,6 @@ class Card(ABC):
 
     def rich(self, offset: int = 0, style: str = 'bold green') -> str:
         return f'[{style}]{type(self).__name__}[{offset}][/{style}]'
+
+    def __lt__(self, other: Card) -> bool:
+        return self.ID < other.ID

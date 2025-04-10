@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Bloodletting(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, add_energy: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=0,
             target_types=[],
         )

@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.juggernaut_buff import JuggernautBuff
 
 class Juggernaut(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Power
     def __init__(self, buff: int = 5) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Power,
             cost=2,
             target_types=[],
         )

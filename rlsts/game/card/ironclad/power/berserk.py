@@ -3,10 +3,10 @@ from ....effect.buff.berserk_buff import BerserkBuff
 from ....effect.debuff.vulnerable import Vulnerable
 
 class Berserk(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Power
     def __init__(self, debuff: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Power,
             cost=0,
             target_types=[],
         )

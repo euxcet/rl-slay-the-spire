@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Havoc(Card):
+    rarity = CardRarity.Common
+    type = CardType.Skill
     def __init__(self, cost: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Skill,
             cost=cost,
             target_types=[],
         )

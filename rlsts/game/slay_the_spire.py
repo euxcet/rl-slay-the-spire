@@ -13,20 +13,20 @@ from .location.merchant_location import MerchantLocation
 from .location.treasure_location import TreasureLocation
 from .observation.choose_room_observation import ChooseRoomObservation
 from .observation.combat_observation import CombatObservation
-
-class SlayTheSpireStatus(Enum):
-    ChooseRoom = 0
-    InRoom = 1
+from .game_status import GameStatus
 
 class SlayTheSpire():
     def __init__(self, character: Character = None) -> None:
         self.character = character or Ironclad(Deck.ironclad_starter_deck())
         self.locations = {}
-        self.status = SlayTheSpireStatus.InRoom
-        self.num_monster_combat = 0
-        self.num_event_not_monster = 0
-        self.num_event_not_treasure = 0
-        self.num_event_not_merchant = 0
+        self.game_status = GameStatus(
+            floor=0,
+            is_in_room=True,
+            num_monster_combat=0,
+            num_event_not_monster=0,
+            num_event_not_treasure=0,
+            num_event_not_merchant=0,
+        )
 
     @property
     def current_room(self) -> MapRoom:
@@ -38,10 +38,7 @@ class SlayTheSpire():
             new_location = create_location(
                 room=self.current_room,
                 character=self.character,
-                num_monster_combat=self.num_monster_combat,
-                num_event_not_monster=self.num_event_not_monster,
-                num_event_not_treasure=self.num_event_not_treasure,
-                num_event_not_merchant=self.num_event_not_merchant,
+                game_status=self.game_status,
             )
             if isinstance(new_location, MonsterLocation):
                 self.num_monster_combat += 1
@@ -68,17 +65,18 @@ class SlayTheSpire():
     def reset(self, *, seed = None, options = None) -> tuple:
         random.seed(seed)
         self.map = Map.generate(act=1)
-        self.status = SlayTheSpireStatus.InRoom
+        self.game_status.is_in_room = True
         return self.current_location.reset()
 
     def step(self, action: int):
-        if self.status == SlayTheSpireStatus.ChooseRoom:
+        if self.game_status.is_choose_room:
             self.map.step(action)
-            self.status = SlayTheSpireStatus.InRoom
+            self.game_status.floor = self.current_room.floor
+            self.game_status.is_in_room = True
             return self.current_location.reset()
-        elif self.status == SlayTheSpireStatus.InRoom:
+        else:
             obs = self.current_location.step(action)
             if obs == None or (isinstance(obs, CombatObservation) and not obs.is_game_over and obs.is_over):
-                self.status = SlayTheSpireStatus.ChooseRoom
+                self.game_status.is_in_room = False
                 return self.observe_choose_room()
             return obs

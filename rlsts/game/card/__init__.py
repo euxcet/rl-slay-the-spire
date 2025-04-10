@@ -1,4 +1,4 @@
-from .card import Card, CardTargetType
+from .card import Card, CardType, CardTargetType, CardRarity
 from .pile import Pile
 from .deck import Deck
 from ...utils.collection import Collection
@@ -224,3 +224,42 @@ def upgrade(card: Card) -> Card:
         return upgraded
     else:
         return card
+
+def ironclad_attack_cards() -> list[type]:
+    return [
+        Anger, BodySlam, Clash, Cleave, Clothesline, Headbutt,
+        IronWave, PommelStrike, SwordBoomerang, Thunderclap, TwinStrike,
+        WildStrike, BloodForBlood, Carnage, Dropkick, Hemokinesis,
+        Pummel, Rampage, RecklessCharge, SeverSoul, Uppercut,
+        Whirlwind, Bludgeon, FiendFire, Immolate,
+        # TODO: HeavyBlade Feed Reaper SearingBlow
+    ]
+
+def ironclad_skill_cards() -> list[type]:
+    return [
+        Armaments, BattleTrance, Bloodletting, BurningPact, Disarm,
+        DualWield, Entrench, Exhume, FlameBarrier, Flex, GhostlyArmor,
+        Havoc, Impervious, InfernalBlade, Intimidate, LimitBreak, Offering,
+        PowerThrough, Rage, SecondWind, SeeingRed, Sentinel, Shockwave,
+        ShrugItOff, SpotWeakness, TrueGrit, Warcry,
+        # TODO: DoubleTap InfernalBlade
+    ]
+
+def ironclad_power_cards() -> list[type]:
+    return [
+        Juggernaut, Evolve, DemonForm, Rupture, Brutality, DarkEmbrace,
+        Corruption, FireBreathing, Metallicize, Inflame, Berserk,
+        Barricade, Combust, FeelNoPain
+    ]
+
+def ironclad_all_cards() -> list[type]:
+    return ironclad_attack_cards() + ironclad_skill_cards() + ironclad_power_cards()
+
+def ironclad_common_cards() -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Common, ironclad_all_cards()))
+
+def ironclad_uncommon_cards() -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Uncommon, ironclad_all_cards()))
+
+def ironclad_rare_cards() -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Rare, ironclad_all_cards()))

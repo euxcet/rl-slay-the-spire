@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from ..enemy import Enemy
     from ..combat.combat import Combat
     from ..card import Card
+    from ..relic import Relic
 
 class Character(Target):
     def __init__(
@@ -33,6 +34,7 @@ class Character(Target):
         self.playing_card = None
         self.card_played_turn = 0
         self.act = 1
+        self.relics: list[Relic] = []
 
     def is_in_combat(self) -> bool:
         return self.combat is not None
@@ -163,3 +165,8 @@ class Character(Target):
     def lose_gold(self, gold: int) -> int:
         self.gold = max(0, self.gold - gold)
         return self.gold
+
+    def receive_hp(self, hp: int) -> int:
+        for relic in self.relics:
+            hp = relic.modify_received_hp(hp)
+        self.hp = min(self.hp + hp, self.max_hp)

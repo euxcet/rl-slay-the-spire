@@ -96,12 +96,24 @@ from .ironclad.power.feel_no_pain import FeelNoPain, FeelNoPainPlus
 class Deck():
     def __init__(self, cards: list[Card]) -> None:
         self.cards = cards
+        self.cards.sort()
 
     def add_cards(self, cards: Card | list[Card]) -> None:
         if isinstance(cards, list):
             self.cards.extend(cards)
         else:
             self.cards.append(cards)
+        self.cards.sort()
+
+    def remove_cards(self, cards: Card | list[Card]) -> None:
+        if isinstance(cards, list):
+            for card in cards:
+                self.cards.remove(card)
+        else:
+            self.cards.remove(cards)
+
+    def filter(self, f) -> list[Card]:
+        return [t for t in self.cards if f(t)]
 
     @staticmethod
     def ironclad_starter_deck() -> Deck:

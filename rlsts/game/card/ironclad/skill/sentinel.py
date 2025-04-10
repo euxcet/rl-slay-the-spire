@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Sentinel(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, block: int = 5, energy: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=1,
             target_types=[],
         )

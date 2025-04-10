@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ...status.wound import Wound
 
 class PowerThrough(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, block: int = 15) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=1,
             target_types=[],
         )

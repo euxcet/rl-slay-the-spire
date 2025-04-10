@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect import FlameBarrierBuff
 
 class FlameBarrier(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, block: int = 12, buff: int = 4) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=2,
             target_types=[],
         )

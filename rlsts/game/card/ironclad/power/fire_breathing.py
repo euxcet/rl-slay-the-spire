@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType
 from ....effect.buff.fire_breathing_buff import FireBreathingBuff
 
 class FireBreathing(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Power
     def __init__(self, buff: int = 6) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Power,
             cost=1,
             target_types=[],
         )

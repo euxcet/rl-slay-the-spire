@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect.debuff.vulnerable import Vulnerable
 
 class Bash(Card):
+    rarity = CardRarity.Starter
+    type = CardType.Attack
     def __init__(self, damage: int = 8, debuff: int = 2) -> None:
         super().__init__(
-            rarity=CardRarity.Starter,
-            type=CardType.Attack,
             cost=2,
             target_types=[CardTargetType.Enemy],
         )

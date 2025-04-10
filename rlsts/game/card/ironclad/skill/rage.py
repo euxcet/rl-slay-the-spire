@@ -2,10 +2,10 @@ from ...card import Card, CardRarity, CardType, CardTargetType
 from ....effect.buff.rage_buff import RageBuff
 
 class Rage(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, buff: int = 3) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=0,
             target_types=[],
         )

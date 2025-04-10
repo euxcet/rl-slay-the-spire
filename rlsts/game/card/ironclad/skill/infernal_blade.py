@@ -3,10 +3,10 @@ from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class InfernalBlade(Card):
+    rarity = CardRarity.Common
+    type = CardType.Skill
     def __init__(self, damage: int = 6) -> None:
         super().__init__(
-            rarity=CardRarity.Common,
-            type=CardType.Skill,
             cost=0,
             target_types=[CardTargetType.Enemy],
         )

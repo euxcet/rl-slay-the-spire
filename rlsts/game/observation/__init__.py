@@ -1,2 +1,6 @@
 from .combat_observation import CombatObservation
+from .choose_card_observation import ChooseCardObservation
 from .choose_room_observation import ChooseRoomObservation
+from .event_observation import EventObservation
+from .merchant_observation import MerchantObservation
+from .modify_deck_observation import ModifyDeckObservation

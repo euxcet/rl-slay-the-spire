@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class Impervious(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Skill
     def __init__(self, block: int = 30) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Skill,
             cost=2,
             target_types=[],
             is_exhaust=True,

@@ -2,10 +2,10 @@ from copy import deepcopy
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class DualWield(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Skill
     def __init__(self, num: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Skill,
             cost=1,
             target_types=[(CardTargetType.Hand, lambda x: x.type in [CardType.Attack, CardType.Power])],
         )

@@ -3,10 +3,10 @@ from ....effect.debuff.vulnerable import Vulnerable
 from ....effect.debuff.weak import Weak
 
 class Uppercut(Card):
+    rarity = CardRarity.Uncommon
+    type = CardType.Attack
     def __init__(self, weak: int = 1, vulnerable: int = 1) -> None:
         super().__init__(
-            rarity=CardRarity.Uncommon,
-            type=CardType.Attack,
             cost=2,
             target_types=[CardTargetType.Enemy],
         )

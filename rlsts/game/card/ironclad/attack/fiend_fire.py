@@ -1,10 +1,10 @@
 from ...card import Card, CardRarity, CardType, CardTargetType
 
 class FiendFire(Card):
+    rarity = CardRarity.Rare
+    type = CardType.Attack
     def __init__(self, damage: int = 7) -> None:
         super().__init__(
-            rarity=CardRarity.Rare,
-            type=CardType.Attack,
             cost=2,
             target_types=[CardTargetType.Enemy],
         )
