@@ -20,7 +20,7 @@ class TestGame():
         game = SlayTheSpire()
         obs = game.reset()
         while True:
-            console.log(obs.rich())
+            console.log('\n' + obs.rich())
             try:
                 command = console.input('Input action: ')
                 if command == 'q':
@@ -37,6 +37,7 @@ class TestGame():
                     continue
                 elif command == 'd':
                     self.print_pile(Pile(cards=game.character.deck.cards), 'Deck', console, offset=0)
+                    continue
                 action = int(command)
             except ValueError as e:
                 continue

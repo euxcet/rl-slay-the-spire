@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+from typing import Callable
 from .card import Card
 
 # ./starter
@@ -112,8 +113,14 @@ class Deck():
         else:
             self.cards.remove(cards)
 
-    def filter(self, f) -> list[Card]:
+    def filter(self, f: Callable) -> list[Card]:
         return [t for t in self.cards if f(t)]
+
+    @staticmethod
+    def ironclad_test_deck() -> Deck:
+        return Deck([Shockwave(), SpotWeakness(), TrueGrit(), ArmamentsPlus(), BodySlam(), Cleave(), \
+                     Clothesline(), Headbutt(), PommelStrike(), Thunderclap(), TwinStrike(), WildStrike(),\
+                     Bludgeon(), FiendFire(), Immolate()])
 
     @staticmethod
     def ironclad_starter_deck() -> Deck:
@@ -125,9 +132,6 @@ class Deck():
 
     @staticmethod
     def ironclad_random_deck() -> Deck:
-        # return Deck([Shockwave(), SpotWeakness(), TrueGrit(), ArmamentsPlus(), BodySlam(), Cleave(), \
-        #              Clothesline(), Headbutt(), PommelStrike(), Thunderclap(), TwinStrike(), WildStrike(),\
-        #              Bludgeon(), FiendFire(), Immolate()])
         card_types = {
             "strike": ([Strike], random.randint(3, 5), 10, 0),
             

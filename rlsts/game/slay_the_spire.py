@@ -41,7 +41,7 @@ class SlayTheSpire():
                 game_status=self.game_status,
             )
             if isinstance(new_location, MonsterLocation):
-                self.num_monster_combat += 1
+                self.game_status.num_monster_combat += 1
             if self.current_room.location == MapLocation.Event:
                 if not isinstance(new_location, MonsterLocation):
                     self.num_event_not_monster += 1
@@ -76,7 +76,8 @@ class SlayTheSpire():
             return self.current_location.reset()
         else:
             obs = self.current_location.step(action)
-            if obs == None or (isinstance(obs, CombatObservation) and not obs.is_game_over and obs.is_over):
+            if obs == None:
+            # if obs == None or (isinstance(obs, CombatObservation) and not obs.is_game_over and obs.is_over):
                 self.game_status.is_in_room = False
                 return self.observe_choose_room()
             return obs

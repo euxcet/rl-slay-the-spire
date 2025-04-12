@@ -1,10 +1,22 @@
+import random
 import math
+import copy
 from abc import ABC, abstractmethod
 from ..observation.event_observation import EventObservation
 from ..observation.modify_deck_observation import ModifyDeckObservation
+from ..card import upgrade, ironclad_all_cards
 from typing import TYPE_CHECKING
+from functools import wraps
 if TYPE_CHECKING:
     from ..character import Character
+
+def save_obs(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        obs = func(self, *args, **kwargs)
+        self.last_obs = obs
+        return obs
+    return wrapper
 
 class Event(ABC):
     act = []
@@ -13,25 +25,24 @@ class Event(ABC):
     def __init__(
         self, 
         character: 'Character',
-        # act: list[int],
-        # is_regular: bool,
     ) -> None:
         self.character = character
         self.is_removing = False
         self.is_upgrading = False
         self.is_transforming = False
-        # self.act = act
-        # self.is_regular = is_regular
+        self.last_obs = None
 
     @property
     def valid(self) -> bool:
         return True
 
     @abstractmethod
+    @save_obs
     def reset(self) -> EventObservation:
         ...
 
     @abstractmethod
+    @save_obs
     def step(self, action: int) -> bool:
         if self.is_removing:
             self.remove_card(action)
@@ -59,38 +70,39 @@ class Event(ABC):
         self.character.gain_max_hp(num=num, percent=percent)
 
     def remove_card(self, action: int) -> None:
-        # len(deck) > 0
+        self.character.deck.remove_cards(self.last_obs.options[action])
         self.is_removing = False
         return None
 
     def remove_card_obs(self) -> ModifyDeckObservation:
         self.is_removing = True
-        ...
+        return ModifyDeckObservation.remove_observation(self.character)
 
-    # upgrade a random card if action is None
     def upgrade_card(self, action: int | None = None) -> None:
-        # len(deck) > 0
+        self.character.deck.remove_cards(self.last_obs.options[action])
+        self.character.deck.add_cards(upgrade(self.last_obs.options[action]))
         self.is_upgrading = False
         return None
 
     def upgrade_card_obs(self) -> ModifyDeckObservation:
         self.is_upgrading = True
-        ...
+        return ModifyDeckObservation.upgrade_observation(self.character)
 
     def transform_card(self, action: int) -> None:
-        # len(deck) > 0
+        self.character.deck.remove_cards(self.last_obs.options[action])
+        self.character.deck.add_cards(random.choice(ironclad_all_cards())())
         self.is_transforming = False
         return None
 
     def transform_card_obs(self) -> ModifyDeckObservation:
         self.is_transforming = True
-        ...
+        return ModifyDeckObservation.transform_observation(self.character)
 
     def duplicate_card(self, action: int) -> None:
-        # len(deck) > 0
+        self.character.deck.add_cards(copy.deepcopy(self.last_obs.options[action]))
         self.is_transforming = False
         return None
 
     def duplicate_card_obs(self) -> ModifyDeckObservation:
         self.is_transforming = True
-        ...
+        return ModifyDeckObservation.duplicate_observation(self.character)

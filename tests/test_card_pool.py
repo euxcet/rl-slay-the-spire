@@ -9,19 +9,21 @@ class TestCardPool():
         common = 0
         uncommon = 0
         rare = 0
-        count = 100000
+        count = 10000
         for i in range(count):
             x = pool.next_card()
             common += x.rarity == CardRarity.Common
             uncommon += x.rarity == CardRarity.Uncommon
             rare += x.rarity == CardRarity.Rare
+        print()
         print(common / count, uncommon / count, rare / count)
+        print('\n')
 
         pool = merchant_card_pool
         common = 0
         uncommon = 0
         rare = 0
-        count = 100000
+        count = 10000
         for i in range(count):
             x = pool.next_card()
             common += x.rarity == CardRarity.Common

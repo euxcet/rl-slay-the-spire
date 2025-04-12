@@ -1,4 +1,5 @@
 import random
+from ..event import save_obs
 from ...observation.event_observation import EventObservation
 from ..options_event import OptionsEvent
 from typing import TYPE_CHECKING
@@ -18,6 +19,7 @@ class WorldOfGoopEvent(OptionsEvent):
         ]
         self.options = [True] * len(self.options_label)
 
+    @save_obs
     def step(self, action: int) -> EventObservation:
         if super().step(action):
             return None

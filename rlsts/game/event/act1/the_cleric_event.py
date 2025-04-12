@@ -1,4 +1,5 @@
 from ...observation.event_observation import EventObservation
+from ..event import save_obs
 from ..options_event import OptionsEvent
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -22,6 +23,7 @@ class TheClericEvent(OptionsEvent):
     def valid(self) -> bool:
         return self.character.gold >= 35
 
+    @save_obs
     def step(self, action: int) -> EventObservation:
         if super().step(action):
             return None

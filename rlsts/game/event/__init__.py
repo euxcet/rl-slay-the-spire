@@ -43,4 +43,5 @@ event_collection.add(WheelOfChangeEvent)
 act1_event_collection = event_collection.find(lambda x: 1 in x.act)
 
 def choose_event(collection: list[type]) -> type:
+    return LivingWallEvent
     return choose_with_prob(list(map(lambda x: (x, 0.75 if x.is_regular else 0.25), collection)))

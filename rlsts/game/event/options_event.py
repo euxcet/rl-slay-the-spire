@@ -1,6 +1,6 @@
 import numpy as np
 from ..observation.event_observation import EventObservation
-from .event import Event
+from .event import Event, save_obs
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..character import Character
@@ -29,8 +29,10 @@ class OptionsEvent(Event):
             action_mask=np.array(self.options, dtype=np.int16)
         )
 
+    @save_obs
     def reset(self) -> EventObservation:
         return self.observe()
 
+    @save_obs
     def step(self, action: int) -> EventObservation:
         return super().step(action)

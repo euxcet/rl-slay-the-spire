@@ -18,7 +18,7 @@ def create_location(
     character: 'Character',
     game_status: GameStatus,
 ) -> Location:
-    # return EventLocation(room=room, character=character, game_status=game_status)
+    return MonsterLocation(room=room, character=character, game_status=game_status)
     if room.location == MapLocation.Monster:
         return MonsterLocation(room=room, character=character, game_status=game_status)
     elif room.location == MapLocation.Neow:

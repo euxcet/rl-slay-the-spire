@@ -43,3 +43,9 @@ class MerchantObservation():
         self.card_removal_service = card_removal_service
         self.card_removal_service_price = card_removal_service_price
         self.action_mask = action_mask
+
+    def __str__(self) -> str:
+        return "MerchantObservation"
+
+    def rich(self) -> str:
+        ...

@@ -1,6 +1,7 @@
 import math
 import random
 from ...observation.event_observation import EventObservation
+from ..event import save_obs
 from ..options_event import OptionsEvent
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -20,6 +21,7 @@ class ScrapOozeEvent(OptionsEvent):
         ]
         self.options = [True] * len(self.options_label)
 
+    @save_obs
     def step(self, action: int) -> EventObservation:
         if super().step(action):
             return None

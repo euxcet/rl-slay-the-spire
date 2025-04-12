@@ -255,11 +255,11 @@ def ironclad_power_cards() -> list[type]:
 def ironclad_all_cards() -> list[type]:
     return ironclad_attack_cards() + ironclad_skill_cards() + ironclad_power_cards()
 
-def ironclad_common_cards() -> list[type]:
-    return list(filter(lambda t: t.rarity == CardRarity.Common, ironclad_all_cards()))
+def ironclad_common_cards(cards: list[type]) -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Common, cards))
 
-def ironclad_uncommon_cards() -> list[type]:
-    return list(filter(lambda t: t.rarity == CardRarity.Uncommon, ironclad_all_cards()))
+def ironclad_uncommon_cards(cards: list[type]) -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Uncommon, cards))
 
-def ironclad_rare_cards() -> list[type]:
-    return list(filter(lambda t: t.rarity == CardRarity.Rare, ironclad_all_cards()))
+def ironclad_rare_cards(cards: list[type]) -> list[type]:
+    return list(filter(lambda t: t.rarity == CardRarity.Rare, cards))
