@@ -33,9 +33,10 @@ class MonsterLocation(Location):
                 self.character.receive_gold(self.gold)
                 # TODO: potion
                 self.status = 1
-                self.choose_card_obs = ChooseCardObservation.monster_observation()
+                self.choose_card_obs = ChooseCardObservation.monster_observation(self.character)
                 return self.choose_card_obs
             return obs 
         elif self.status == 1:
-            self.character.deck.add_cards(self.choose_card_obs.options[action].set_character(character=self.character))
+            if action > 0:
+                self.character.deck.add_cards(self.choose_card_obs.options[action - 1].set_character(character=self.character))
             return None

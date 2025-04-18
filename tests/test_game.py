@@ -45,6 +45,7 @@ class TestGame():
             if action >= len(obs.action_mask) or obs.action_mask[action] == 0:
                 continue
             obs = game.step(action)
+            print(type(obs))
             if isinstance(obs, CombatObservation):
                 if obs.playing_card:
                     console.log('[bold]Choice list:[/bold]')
@@ -58,8 +59,7 @@ class TestGame():
                 if obs.is_game_over:
                     console.log('You died.')
                     break
-            if isinstance(obs, ChooseRoomObservation):
-                if obs.is_win:
+                elif obs.is_over:
                     console.log('You win.')
                     break
 

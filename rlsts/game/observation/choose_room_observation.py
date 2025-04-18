@@ -5,11 +5,9 @@ class ChooseRoomObservation():
     def __init__(
         self,
         options: list[MapRoom],
-        is_win: bool,
         action_mask: np.ndarray,
     ) -> None:
         self.options = options
-        self.is_win = is_win
         self.action_mask = action_mask
 
     def __str__(self) -> str:

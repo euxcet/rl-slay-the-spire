@@ -3,7 +3,6 @@ import ray
 import fire
 from ray import tune
 from ray.rllib.core.rl_module.rl_module import RLModuleSpec
-from ray.rllib.core.rl_module.multi_rl_module import MultiRLModuleSpec
 from ray.tune import CLIReporter
 from ray.rllib.algorithms.ppo import PPOConfig
 from ray.rllib.utils.metrics import (
@@ -20,16 +19,14 @@ from ray.rllib.utils.metrics import (
 )
 from ray.tune.result import TRAINING_ITERATION
 
-from .env.slay_the_spire_env import SlayTheSpireEnv
+from .env.combat_env import CombatEnv
 from .module.combat_module import CombatModule
-from .module.choose_card_module import ChooseCardModule
-from .module.slay_the_spire_module import SlayTheSpireModule
 
 def _train(
     num_env_runners: int = 1,
     num_envs_per_env_runner: int = 1,
     num_cpus_per_env_runner: int | float = 1,
-    num_gpus_per_env_runner: int | float = 0,
+    num_gpus_per_env_runner: int | float = 0.05,
     num_learners: int = 1,
     num_cpus_per_learner: int | float | str = 1,
     num_gpus_per_learner: int | float = 0,
@@ -44,7 +41,7 @@ def _train(
     config = (
         PPOConfig()
         .framework("torch")
-        .environment(SlayTheSpireEnv)
+        .environment(CombatEnv)
         .api_stack(
             enable_rl_module_and_learner=True,
             enable_env_runner_and_connector_v2=True,
@@ -60,28 +57,10 @@ def _train(
             num_cpus_per_learner=num_cpus_per_learner,
             num_gpus_per_learner=num_gpus_per_learner,
         )
-        .multi_agent(
-            policies={"combat_agent", "choose_card_agent"},
-            policy_mapping_fn=lambda aid, episode: aid,
-            # policies_to_train=["combat_agent", "choose_card_agent"],
-        )
         .rl_module(
-            # rl_module_spec=RLModuleSpec(
-            #     module_class=CombatModule,
-            #     model_config={},
-            # ),
-            rl_module_spec=MultiRLModuleSpec(
-                # multi_rl_module_class=SlayTheSpireModule,
-                rl_module_specs={
-                    "combat_agent": RLModuleSpec(
-                        module_class=CombatModule,
-                        model_config={},
-                    ),
-                    "choose_card_agent": RLModuleSpec(
-                        module_class=ChooseCardModule,
-                        model_config={},
-                    )
-                },
+            rl_module_spec=RLModuleSpec(
+                module_class=CombatModule,
+                model_config={},
             ),
         )
         .training(

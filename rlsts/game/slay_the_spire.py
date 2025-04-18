@@ -44,11 +44,11 @@ class SlayTheSpire():
                 self.game_status.num_monster_combat += 1
             if self.current_room.location == MapLocation.Event:
                 if not isinstance(new_location, MonsterLocation):
-                    self.num_event_not_monster += 1
+                    self.game_status.num_event_not_monster += 1
                 elif not isinstance(new_location, MerchantLocation):
-                    self.num_event_not_merchant += 1
+                    self.game_status.num_event_not_merchant += 1
                 elif not isinstance(new_location, TreasureLocation):
-                    self.num_event_not_treasure += 1
+                    self.game_status.num_event_not_treasure += 1
             self.locations[self.current_room] = new_location
         return self.locations[self.current_room]
 
@@ -58,7 +58,6 @@ class SlayTheSpire():
     def observe_choose_room(self):
         return ChooseRoomObservation(
             options=self.current_room.edges,
-            is_win=self.map.is_last_room(),
             action_mask=np.array([edge != None for edge in self.current_room.edges]),
         )
 
@@ -77,7 +76,11 @@ class SlayTheSpire():
         else:
             obs = self.current_location.step(action)
             if obs == None:
-            # if obs == None or (isinstance(obs, CombatObservation) and not obs.is_game_over and obs.is_over):
                 self.game_status.is_in_room = False
-                return self.observe_choose_room()
+                # return self.observe_choose_room()
+                # for test, skip room selection
+                obs = self.observe_choose_room()
+                for i in range(10):
+                    if obs.action_mask[i] > 0:
+                        return self.step(i)
             return obs

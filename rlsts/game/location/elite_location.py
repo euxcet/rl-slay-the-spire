@@ -12,6 +12,8 @@ class EliteLocation(Location):
     def __init__(self, room: 'MapRoom', character: 'Character', **kwargs) -> None:
         super().__init__(room=room, character=character)
         self.gold = random.randint(25, 35)
+        self.status = 0
+        self.choose_card_obs = None
 
     def reset(self):
         self.combat = Act1EliteCombat(character=self.character)
@@ -24,9 +26,10 @@ class EliteLocation(Location):
                 self.character.receive_gold(self.gold)
                 # TODO: potion relic
                 self.status = 1
-                self.choose_card_obs = ChooseCardObservation.elite_observation()
+                self.choose_card_obs = ChooseCardObservation.elite_observation(self.character)
                 return self.choose_card_obs
             return obs 
         elif self.status == 1:
-            self.character.deck.add_cards(self.choose_card_obs.options[action].set_character(character=self.character))
+            if action > 0:
+                self.character.deck.add_cards(self.choose_card_obs.options[action - 1].set_character(character=self.character))
             return None
